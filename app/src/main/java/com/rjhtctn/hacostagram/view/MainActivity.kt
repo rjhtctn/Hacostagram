@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val config = hashMapOf<String, Any>("cloud_name" to BuildConfig.CLOUD_NAME)
+        val config = hashMapOf("cloud_name" to BuildConfig.CLOUD_NAME)
         MediaManager.init(this, config)
     }
 }
