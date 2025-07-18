@@ -1,0 +1,41 @@
+# ========== IDE & META ==========
+.idea/
+*.iml
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+.DS_Store
+Thumbs.db
+
+# ========== BUILD & CACHES ==========
+gradle.properties
+.gradle/
+**/build/
+.cxx/
+.externalNativeBuild/
+captures/
+output-metadata.json
+
+# Gradle Wrapper
+gradlew
+gradlew.bat
+
+# ========== LOCAL CONFIG ==========
+local.properties
+.env
+.env.*
+
+# ========== SECRETS & CREDENTIALS ==========
+**/google-services.json
+*.jks
+*.keystore
+
+# ========== LOGS & PROFILES ==========
+*.log
+*.hprof
+*.orig
+
+# ========== PACKAGE OUTPUT ==========
+*.apk
+*.aab
+*.aar
