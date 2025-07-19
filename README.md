@@ -1,41 +1,90 @@
 # Hacostagram
 
-Kotlin ile geliştirilen, Firebase tabanlı basit bir fotoğraf paylaşım uygulaması.
+Kotlin + Jetpack Navigation ile geliştirilen, Firebase ve **Cloudinary (unsigned upload)** destekli fotoğraf paylaşım uygulaması  
+“Instagram mantığını” sade fakat **ölçeklenebilir** bir mimaride örneklemeyi amaçlar.
 
-## Özellikler
+---
 
-* **Kullanıcı girişi** – E‑posta & şifre ile oturum açma (Firebase Authentication)
-* **Fotoğraf paylaşımı** – Cihazdan seçilen görselleri yükleyip gönderi oluşturma
-* **Gerçek‑zamanlı akış** – Gönderileri kronolojik olarak listeleme (Cloud Firestore)
-* **Görsel önbellekleme** – Resimleri hızlıca göstermek için Picasso
-* **Harici medya depolama** – Cloudinary entegrasyonu ile esnek resim saklama
+## 🚀 Özellikler
 
-## Hızlı Başlangıç
+| Kategori | Özellikler                                                                                             |
+| -------- |--------------------------------------------------------------------------------------------------------|
+| **Kayıt** | Ad‑Soyad, Kullanıcı Adı, E‑posta, Şifre                                                                |
+| **Giriş** | Kullanıcı Adı / E-Posta + Şifre                                                                        |
+| **Şifre Sıfırlama** | Kullanıcı Adı + E‑posta                                                                                |
+| **Şifre Değiştirme** | Mevcut Şifre + Yeni Şifre                                                                              |
+| **Gönderi** | Görsel seç + Yorum Ekle & yükle <br> Gerçek‑zamanlı akış (Firestore) <br> Gönderi menüsü – Sil / Düzenle |
+| **Profil** | Kullanıcı gönderilerini listeleme & Bilgiler <br> Hesap silme (Firebase + Cloudinary)                  |
+| **Arayüz** | Bottom Navigation → Feed / Home / Profile <br> Drawer Menu <br> Material 3 tema                        |
+| **Medya** | Cloudinary “unsigned upload” <br> Picasso ile yerel önbellek                                           |
 
-> Proje anahtarları dâhil değildir; kendi Firebase yapılandırmanızı kullanmalısınız.
+---
 
-1. Depoyu klonlayın:
+## 🗂 Ekran / Fragment Haritası
 
-   ```bash
-   git clone https://github.com/kullanici/hacostagram.git
+| Fragment | Amaç                                                  |
+| -------- |-------------------------------------------------------|
+| `GirisFragment` | **Kullanıcı Adı/E-Posta + Şifre** ile giriş           |
+| `KayitFragment` | Ad‑Soyad, Kullanıcı Adı, E‑posta, Şifre ile kayıt     |
+| `SifreSifirlamaFragment` | Kullanıcı Adı & E‑posta ile sıfırlama isteği          |
+| `SifreDegistirFragment` | Mevcut Şifre + Yeni Şifre doğrulama                   |
+| `FeedFragment` | Tüm gönderileri listeler                              |
+| `YuklemeFragment` | Yeni fotoğraf yükleme + Yorum ekleme                  |
+| `ProfilFragment` | Kullanıcının profil duvarı + Kullanıcının gönderileri |
+| `KayitSilFragment` | Kullanıcı adı + E-Posta + Şifre + Hesap kapatma onayı |
+| `HomeFragment` | Alt gezinmenin kök noktası                            |
+
+Tam yönlendirme yapısı iki ayrı Navigation Graph’te (`nav_graph.xml`, `home_nav_graph.xml`) tanımlıdır.
+
+---
+
+## 🔧 Kurulum
+
+> Proje anahtarları **dahil değildir**. Aşağıdaki adımlar size ait yapılandırmayı içerir.
+
+```bash
+git clone https://github.com/rjhtctn/hacostagram.git
+````
+
+1. **Firebase Console** ► yeni proje ► Android uygulaması ekleyin
+   `google-services.json` dosyasını `app/` klasörüne koyun.
+2. Authentication’da **E‑posta/Şifre**; Firestore’da **test kuralları** (veya kendi kurallarınız) etkinleştirin.
+3. **Cloudinary** hesabı açın → **Unsigned Preset** oluşturun.
+   `local.properties` veya CI gizli değişkenlerinde:
+
    ```
-2. Firebase Console’da yeni bir proje oluşturun.
-3. **Authentication** (E‑posta/Şifre) ve **Cloud Firestore**’u etkinleştirin.
-4. Android uygulaması ekleyin, `google-services.json` dosyasını indirip `app/` klasörüne yerleştirin.
-5. [Cloudinary](https://cloudinary.com/) hesabı oluşturun ve API anahtarınızı güvenli şekilde ekleyin.
-6. Android Studio ile projeyi açın ve **Run** tuşuna basın.
+   CLOUD_NAME=xxx
+   API_KEY=xxx
+   UNSIGNED_PRESET=unsigned_preset
+   ```
+4. Android Studio ► **Run** ▶️
 
-## Temel Mimarî
+---
 
-| Katman      | Açıklama                                       |
-| ----------- | ---------------------------------------------- |
-| **UI**      | Activity / Fragment + View Binding             |
-| **Adapter** | `PostAdapter` sınıfı ile RecyclerView          |
-| **Data**    | Firebase Cloud Firestore ‑ `Posts` koleksiyonu |
+## 🏗 Katmanlı Mimarî
 
-## Önemli Bağımlılıklar
+```
+app/
+ ├── ui/ (Activity & Fragment’ler)
+ ├── adapter/ PostAdapter.kt
+ ├── model/  Posts.kt
+ └── res/
+      ├── layout/ …xml
+      └── navigation/ …xml
+```
 
-* **Firebase BoM** – `com.google.firebase:firebase-bom`
-* **Cloudinary Android SDK** – `com.cloudinary:cloudinary-android`
-* **Picasso** – `com.squareup.picasso:picasso`
-* **AndroidX RecyclerView**
+Basit **Fragment + Repository** düzeni; ileri seviye için ViewModel‑Hilt’e geçirilebilir.
+
+---
+
+## 📦 Önemli Bağımlılıklar
+
+| Grup          | Kütüphane                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Firebase      | `com.google.firebase:firebase-bom`                                                                                                   |
+| Cloud Storage | `com.cloudinary:cloudinary-android`                                                                                                  |
+| UI            | `androidx.navigation:navigation-fragment-ktx` <br>`androidx.navigation:navigation-ui-ktx` <br>`com.google.android.material:material` |
+| Görsel        | `com.squareup.picasso:picasso`                                                                                                       |
+| Test          | `junit:junit`, `androidx.test.ext:junit`                                                                                             |
+
+---
