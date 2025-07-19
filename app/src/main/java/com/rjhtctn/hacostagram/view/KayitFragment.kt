@@ -43,7 +43,7 @@ class KayitFragment : Fragment() {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
-                    val action = GirisFragmentDirections.actionKullaniciFragmentToFeedFragment()
+                    val action = KayitFragmentDirections.actionKayitFragmentToGirisFragment()
                     view.findNavController().navigate(action)
                 }
             }.addOnFailureListener { exception ->
@@ -55,8 +55,8 @@ class KayitFragment : Fragment() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

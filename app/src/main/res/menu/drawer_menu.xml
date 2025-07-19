@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_detay" android:title="Hesap Detay" />
+    <item android:id="@+id/menu_sifre_degistir" android:title="Şifre Değiştir"/>
+    <item android:id="@+id/menu_cikis" android:title="Çıkış Yap" />
+</menu>

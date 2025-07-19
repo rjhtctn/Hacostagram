@@ -3,39 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/kullaniciFragment">
-
+    app:startDestination="@id/girisFragment">
     <fragment
-        android:id="@+id/kullaniciFragment"
+        android:id="@+id/girisFragment"
         android:name="com.rjhtctn.hacostagram.view.GirisFragment"
-        android:label="fragment_kullanici"
+        android:label="fragment_giris"
         tools:layout="@layout/fragment_giris" >
         <action
-            android:id="@+id/action_kullaniciFragment_to_feedFragment"
-            app:destination="@id/feedFragment" />
+            android:id="@+id/action_girisFragment_to_kayitFragment"
+            app:destination="@id/kayitFragment" />
+        <action
+            android:id="@+id/action_girisFragment_to_sifreSifirlamaFragment"
+            app:destination="@id/sifreSifirlamaFragment" />
+        <action
+            android:id="@+id/action_girisFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/feedFragment"
-        android:name="com.rjhtctn.hacostagram.view.FeedFragment"
-        android:label="fragment_feed"
-        tools:layout="@layout/fragment_feed" >
+        android:id="@+id/kayitFragment"
+        android:name="com.rjhtctn.hacostagram.view.KayitFragment"
+        android:label="fragment_kayit"
+        tools:layout="@layout/fragment_kayit" >
         <action
-            android:id="@+id/action_feedFragment_to_yuklemeFragment"
-            app:destination="@id/yuklemeFragment" />
-        <action
-            android:id="@+id/action_feedFragment_to_kullaniciFragment"
-            app:destination="@id/kullaniciFragment" />
+            android:id="@+id/action_kayitFragment_to_girisFragment"
+            app:destination="@id/girisFragment" />
     </fragment>
     <fragment
-        android:id="@+id/yuklemeFragment"
-        android:name="com.rjhtctn.hacostagram.view.YuklemeFragment"
-        android:label="fragment_yukleme"
-        tools:layout="@layout/fragment_yukleme" >
+        android:id="@+id/kayitSilFragment"
+        android:name="com.rjhtctn.hacostagram.view.KayitSilFragment"
+        android:label="fragment_kayit_sil"
+        tools:layout="@layout/fragment_kayit_sil" >
         <action
-            android:id="@+id/action_yuklemeFragment_to_feedFragment"
-            app:destination="@id/feedFragment" />
-        <action
-            android:id="@+id/action_yuklemeFragment_to_feedFragment2"
-            app:destination="@id/feedFragment" />
+            android:id="@+id/action_kayitSilFragment_to_girisFragment"
+            app:destination="@id/girisFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profilFragment"
+        android:name="com.rjhtctn.hacostagram.view.ProfilFragment"
+        android:label="ProfilFragment" >
+        <action
+            android:id="@+id/action_profilFragment_to_sifreDegistirFragment"
+            app:destination="@id/sifreDegistirFragment" />
+        <action
+            android:id="@+id/action_profilFragment_to_kayitSilFragment"
+            app:destination="@id/kayitSilFragment" />
+        <action
+            android:id="@+id/action_profilFragment_to_girisFragment"
+            app:destination="@id/girisFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sifreDegistirFragment"
+        android:name="com.rjhtctn.hacostagram.view.SifreDegistirFragment"
+        android:label="fragment_sifre_degistir"
+        tools:layout="@layout/fragment_sifre_degistir" >
+        <action
+            android:id="@+id/action_sifreDegistirFragment_to_profilFragment"
+            app:destination="@id/profilFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sifreSifirlamaFragment"
+        android:name="com.rjhtctn.hacostagram.view.SifreSifirlamaFragment"
+        android:label="fragment_sifre_sifirlama"
+        tools:layout="@layout/fragment_sifre_sifirlama" >
+        <action
+            android:id="@+id/action_sifreSifirlamaFragment_to_girisFragment"
+            app:destination="@id/girisFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.rjhtctn.hacostagram.view.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home"/>
 </navigation>

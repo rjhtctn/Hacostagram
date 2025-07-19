@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="6dp"
+    android:layout_margin="1dp"
     android:background="@drawable/border"
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/recyclerEmailText"
+        android:id="@+id/feedKullaniciAdi"
         android:layout_width="match_parent"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:layout_marginLeft="15dp"
+        app:tint="?attr/colorControlNormal"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
-        android:text="Kullanıcı Email"
+        android:text="Kullanıcı Adı"
         >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/feedPostTarih"
+        android:layout_width="wrap_content"
+        app:tint="?attr/colorControlNormal"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:layout_marginStart="15dp"
+        android:text="Post Tarihi"
+        android:layout_marginTop="2dp"
+        tools:ignore="SmallSp">
 
     </TextView>
 
@@ -33,8 +49,9 @@
         android:id="@+id/recyclerCommentText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tint="?attr/colorControlNormal"
         android:textSize="18sp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:text="Kullanıcı Yorum"

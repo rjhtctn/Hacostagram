@@ -94,17 +94,4 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         super.onDestroyView()
         _binding = null
     }
-
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        if(item?.itemId == R.id.uploadMenu){
-            val action = FeedFragmentDirections.actionFeedFragmentToYuklemeFragment()
-            requireView().findNavController().navigate(action)
-        } else if(item?.itemId == R.id.cikisButton) {
-            auth.signOut()
-            val action = FeedFragmentDirections.actionFeedFragmentToKullaniciFragment()
-            requireView().findNavController().navigate(action)
-        }
-        return true
-    }
-
 }
