@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.KayitSilFragment">
+
+    <Button
+        android:id="@+id/kayitSilİptal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/buton_background"
+        android:text="İptal Et ve Geri Git"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kayitSilButon" />
+
+    <Button
+        android:id="@+id/kayitSilButon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/buton_background"
+        android:text="Kayıt Sil"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre2" />
+
+    <ImageButton
+        android:id="@+id/kayitSilVisibility"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:padding="0dp"
+        android:layout_marginStart="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/visibility_off"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/kayitSilSifre2"
+        app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre"
+        app:tint="?attr/colorControlNormal"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/kayitSilSifre2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="Şifrenizi Doğrulayın"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textColorHint="#B1000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre"
+        app:tint="?attr/colorControlNormal">
+
+    </EditText>
+
+    <TextView
+        android:id="@+id/kayitSilBaslik"
+        android:layout_width="0dp"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:text="Kayıt Silme Ekranı"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        app:tint="?attr/colorControlNormal"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp">
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/kayitSilKullaniciAdi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/kayitSilBaslik"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:ems="10"
+        android:inputType="text"
+        android:minHeight="48dp"
+        app:tint="?attr/colorControlNormal"
+        android:layout_marginStart="40dp"
+        android:hint="Kullanıcı Adınızı Girin"
+        android:autofillHints=""
+        android:textColorHint="#B1000000">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/kayitSilEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/kayitSilKullaniciAdi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:ems="10"
+        android:autofillHints=""
+        android:hint="E-Posta Adresinizi Girin"
+        android:textColorHint="#B1000000"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:tint="?attr/colorControlNormal">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/kayitSilSifre"
+        android:inputType="textPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/kayitSilEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:minHeight="48dp"
+        app:tint="?attr/colorControlNormal"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:hint="Şifrenizi Girin"
+        android:autofillHints=""
+        android:textColorHint="#B1000000">
+
+    </EditText>
+</androidx.constraintlayout.widget.ConstraintLayout>

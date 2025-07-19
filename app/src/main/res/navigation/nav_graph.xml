@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/kullaniciFragment"
-        android:name="com.rjhtctn.hacostagram.view.KullaniciFragment"
+        android:name="com.rjhtctn.hacostagram.view.GirisFragment"
         android:label="fragment_kullanici"
-        tools:layout="@layout/fragment_kullanici" >
+        tools:layout="@layout/fragment_giris" >
         <action
             android:id="@+id/action_kullaniciFragment_to_feedFragment"
             app:destination="@id/feedFragment" />

@@ -10,11 +10,11 @@ import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.rjhtctn.hacostagram.databinding.FragmentKullaniciBinding
+import com.rjhtctn.hacostagram.databinding.FragmentGirisBinding
 
-class KullaniciFragment : Fragment() {
+class GirisFragment : Fragment() {
 
-    private var _binding: FragmentKullaniciBinding? = null
+    private var _binding: FragmentGirisBinding? = null
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
 
@@ -27,45 +27,28 @@ class KullaniciFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentKullaniciBinding.inflate(inflater,container, false)
+        _binding = FragmentGirisBinding.inflate(inflater,container, false)
         val view = binding.root
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.kayitButton.setOnClickListener { kayitOl(it) }
         binding.girisButton.setOnClickListener { girisYap(it) }
         if (auth.currentUser != null) {
-            val action = KullaniciFragmentDirections.actionKullaniciFragmentToFeedFragment()
+            val action = GirisFragmentDirections.actionKullaniciFragmentToFeedFragment()
             view.findNavController().navigate(action)
         }
     }
 
-    private fun kayitOl(view: View){
-        val email = binding.emailEditText.text.toString()
-        val password = binding.passwordEditText.text.toString()
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener{ task ->
-                if (task.isSuccessful) {
-                    val action = KullaniciFragmentDirections.actionKullaniciFragmentToFeedFragment()
-                    view.findNavController().navigate(action)
-                }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(requireContext(),exception.localizedMessage,Toast.LENGTH_LONG).show()
-            }
-        } else {
-            Toast.makeText(requireContext(),"E-POSTA VE PAROLA BOŞ BIRAKILAMAZ!", Toast.LENGTH_LONG).show()
-        }
 
-    }
 
     private fun girisYap (view: View) {
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.signInWithEmailAndPassword(email,password).addOnSuccessListener {
-                val action = KullaniciFragmentDirections.actionKullaniciFragmentToFeedFragment()
+                val action = GirisFragmentDirections.actionKullaniciFragmentToFeedFragment()
                 view.findNavController().navigate(action)
             }.addOnFailureListener { exception ->
                 Toast.makeText(requireContext(),exception.localizedMessage, Toast.LENGTH_LONG).show()
