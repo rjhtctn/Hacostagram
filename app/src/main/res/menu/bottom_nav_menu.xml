@@ -5,11 +5,11 @@
         android:icon="@drawable/home"
         android:title="Feed"/>
     <item
-        android:id="@+id/shareFragment"
+        android:id="@+id/yuklemeFragment"
         android:icon="@drawable/add"
         android:title="Paylaş"/>
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/profilFragment"
         android:icon="@drawable/profile"
         android:title="Profil"/>
 </menu>

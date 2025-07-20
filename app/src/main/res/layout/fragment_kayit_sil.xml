@@ -7,22 +7,6 @@
     tools:context=".view.KayitSilFragment">
 
     <Button
-        android:id="@+id/kayitSilİptal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/buton_background"
-        android:text="İptal Et ve Geri Git"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayitSilButon" />
-
-    <Button
         android:id="@+id/kayitSilButon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +16,7 @@
         android:background="@drawable/buton_background"
         android:text="Kayıt Sil"
         android:textSize="20sp"
+        tools:ignore="DuplicateSpeakableTextCheck"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -44,14 +29,15 @@
         android:layout_height="25dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:contentDescription="@null"
         android:padding="0dp"
-        android:layout_marginStart="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/visibility_off"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/kayitSilSifre2"
         app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre"
         app:tint="?attr/colorControlNormal"
@@ -74,7 +60,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre"
-        app:tint="?attr/colorControlNormal">
+        app:tint="?attr/colorControlNormal"
+        tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
 
@@ -133,7 +120,8 @@
         android:layout_marginStart="40dp"
         android:hint="Kullanıcı Adınızı Girin"
         android:autofillHints=""
-        android:textColorHint="#B1000000">
+        android:textColorHint="#B1000000"
+        tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
 
@@ -153,7 +141,8 @@
         android:textColorHint="#B1000000"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        app:tint="?attr/colorControlNormal">
+        app:tint="?attr/colorControlNormal"
+        tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
 
@@ -173,7 +162,8 @@
         android:layout_marginStart="40dp"
         android:hint="Şifrenizi Girin"
         android:autofillHints=""
-        android:textColorHint="#B1000000">
+        android:textColorHint="#B1000000"
+        tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
 </androidx.constraintlayout.widget.ConstraintLayout>

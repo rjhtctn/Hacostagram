@@ -21,12 +21,11 @@ import com.rjhtctn.hacostagram.adapter.PostAdapter
 import com.rjhtctn.hacostagram.databinding.FragmentFeedBinding
 import com.rjhtctn.hacostagram.model.Posts
 
-class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
+class FeedFragment : Fragment() {
 
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var popup: PopupMenu
     private lateinit var auth: FirebaseAuth
 
     private val postList : ArrayList<Posts> = arrayListOf()
@@ -50,11 +49,6 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.floatingActionButton.setOnClickListener { menuButton() }
-        popup = PopupMenu(requireContext(),binding.floatingActionButton)
-        val inflater = popup.menuInflater
-        inflater.inflate(R.menu.menu,popup.menu)
-        popup.setOnMenuItemClickListener(this)
         firestoreVeriAl()
         adapter = PostAdapter(postList)
         binding.feedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -84,10 +78,6 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 }
             }
         }
-    }
-
-    private fun menuButton() {
-        popup.show()
     }
 
     override fun onDestroyView() {

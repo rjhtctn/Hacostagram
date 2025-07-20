@@ -36,19 +36,23 @@ class GirisFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.girisButton.setOnClickListener { girisYap(it) }
         if (auth.currentUser != null) {
-            val action = GirisFragmentDirections.actionKullaniciFragmentToFeedFragment()
+            val action = GirisFragmentDirections.actionGirisFragmentToHomeFragment()
             view.findNavController().navigate(action)
         }
+        binding.giristenKayitaButon.setOnClickListener { gecisYap(it) }
     }
 
-
+    private fun gecisYap (view: View) {
+        val action = GirisFragmentDirections.actionGirisFragmentToKayitFragment()
+        view.findNavController().navigate(action)
+    }
 
     private fun girisYap (view: View) {
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.signInWithEmailAndPassword(email,password).addOnSuccessListener {
-                val action = GirisFragmentDirections.actionKullaniciFragmentToFeedFragment()
+                val action = GirisFragmentDirections.actionGirisFragmentToHomeFragment()
                 view.findNavController().navigate(action)
             }.addOnFailureListener { exception ->
                 Toast.makeText(requireContext(),exception.localizedMessage, Toast.LENGTH_LONG).show()

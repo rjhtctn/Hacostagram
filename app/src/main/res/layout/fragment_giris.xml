@@ -7,6 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".view.GirisFragment">
 
+    <ImageButton
+        android:id="@+id/girisVisibility"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="32dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/visibility_off"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toEndOf="@+id/passwordEditText"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
+        app:tint="?attr/colorControlNormal"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="0dp"
@@ -58,39 +78,17 @@
 
     <TextView
         android:id="@+id/giris_baslik"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
         android:text="Giriş Ekranı"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backButon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal" />
-
-    <ImageButton
-        android:id="@+id/backButon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:adjustViewBounds="true"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back"
-        app:layout_constraintBottom_toBottomOf="@+id/giris_baslik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        app:tint="?attr/colorControlNormal" />
 
     <TextView
         android:id="@+id/giristen_kayita_buton"
