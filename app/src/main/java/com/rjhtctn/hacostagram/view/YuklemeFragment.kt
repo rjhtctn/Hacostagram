@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import com.google.firebase.firestore.Source
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,16 +31,12 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import com.rjhtctn.hacostagram.databinding.FragmentYuklemeBinding
-
 class YuklemeFragment : Fragment() {
-
     private var _binding: FragmentYuklemeBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var photoPicker: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var safPicker: ActivityResultLauncher<Array<String>>
-
     private var secilenGorsel: Uri? = null
     private var secilenBitmap: Bitmap? = null
     private lateinit var auth: FirebaseAuth
@@ -84,7 +81,6 @@ class YuklemeFragment : Fragment() {
             }
         }
     }
-
     private fun openSelector() {
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
@@ -97,9 +93,9 @@ class YuklemeFragment : Fragment() {
             }
         }
     }
-
     private fun handleSelected(uri: Uri) {
         secilenGorsel = uri
+        binding.uploadImageView.imageTintList = null
         binding.uploadImageView.setImageURI(uri)
 
         secilenBitmap = if (Build.VERSION.SDK_INT >= 28) {
@@ -111,7 +107,6 @@ class YuklemeFragment : Fragment() {
                 requireActivity().contentResolver, uri)
         }
     }
-
     private fun registerLaunchers() {
 
         permissionLauncher = registerForActivityResult(
@@ -130,8 +125,8 @@ class YuklemeFragment : Fragment() {
             ActivityResultContracts.OpenDocument()
         ) { uri -> uri?.let { handleSelected(it) } }
     }
-
     private fun yukleButton() {
+        binding.uploadButton.isEnabled = false
         if (secilenGorsel == null) {
             Toast.makeText(requireContext(), "Önce fotoğraf seçin", Toast.LENGTH_SHORT).show()
             return
@@ -158,20 +153,38 @@ class YuklemeFragment : Fragment() {
     }
 
     private fun firestoreKaydet(url: String) {
-        val post = hashMapOf(
-            "email"     to auth.currentUser?.email,
-            "imageUrl"  to url.replace("upload/", "upload/q_auto,f_auto/"),
-            "comment"   to binding.uploadCommentEditText.text.toString(),
-            "userId"    to auth.currentUser?.uid,
-            "createdAt" to FieldValue.serverTimestamp()
-        )
-        Firebase.firestore.collection("posts")
-            .add(post)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Paylaşıldı!", Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
+        val uid = auth.currentUser?.uid ?: run {
+            toast("Oturum Kapandı!"); return
+        }
+        val db = Firebase.firestore
+        db.collection("users").document(uid).get(Source.SERVER)
+            .addOnSuccessListener { snap ->
+                val username = snap.getString("kullaniciAdi") ?: ""
+                val post = hashMapOf(
+                    "email"     to auth.currentUser?.email,
+                    "imageUrl"  to url.replace("upload/", "upload/q_auto,f_auto/"),
+                    "comment"   to binding.uploadCommentEditText.text.toString(),
+                    "userId"    to auth.currentUser?.uid,
+                    "kullaniciAdi" to username,
+                    "createdAt" to FieldValue.serverTimestamp()
+                )
+
+                Firebase.firestore.collection("posts")
+                    .add(post)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Paylaşıldı!", Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
+                    }.addOnFailureListener { e ->
+                        toast("Firestore hata: ${e.localizedMessage}")
+                        binding.uploadButton.isEnabled = true
+                    }
+            }.addOnFailureListener { e ->
+                toast("Profili okuyamadım: ${e.localizedMessage}")
+                binding.uploadButton.isEnabled = true
             }
     }
+    private fun toast(msg: String) =
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
 
     override fun onDestroyView() {
         super.onDestroyView(); _binding = null

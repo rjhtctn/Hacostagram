@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.rjhtctn.hacostagram.databinding.FragmentHomeBinding
-
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null

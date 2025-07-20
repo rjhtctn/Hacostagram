@@ -45,12 +45,12 @@
 
     <ImageView
         android:id="@+id/uploadImageView"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="200dp"
         android:contentDescription="@null"
         app:tint="?attr/colorControlNormal"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/add_image_asset"
         app:layout_constraintEnd_toEndOf="parent"

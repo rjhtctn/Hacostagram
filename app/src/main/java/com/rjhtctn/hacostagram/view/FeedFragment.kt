@@ -3,23 +3,20 @@ package com.rjhtctn.hacostagram.view
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
-import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.adapter.PostAdapter
 import com.rjhtctn.hacostagram.databinding.FragmentFeedBinding
 import com.rjhtctn.hacostagram.model.Posts
+import java.util.Date
 
 class FeedFragment : Fragment() {
 
@@ -68,9 +65,10 @@ class FeedFragment : Fragment() {
                         val documents = value.documents
                         for (document in documents) {
                             val comment = document.get("comment") as String
-                            val email = document.get("email") as String
+                            val userName = document.get("kullaniciAdi") as String
                             val imageUrl = document.get("imageUrl") as String
-                            val post = Posts(email, comment, imageUrl)
+                            val time = document.getTimestamp("createdAt")?.toDate() ?: Date()
+                            val post = Posts(userName, comment, imageUrl, time)
                             postList.add(post)
                         }
                         adapter?.notifyDataSetChanged()

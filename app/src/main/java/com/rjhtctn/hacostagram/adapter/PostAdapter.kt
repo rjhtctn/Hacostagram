@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rjhtctn.hacostagram.databinding.FeedRecyclerRowBinding
 import com.rjhtctn.hacostagram.model.Posts
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PostAdapter(private val postList : ArrayList<Posts>) : RecyclerView.Adapter<PostAdapter.PostHolder>() {
-
     class PostHolder(val binding : FeedRecyclerRowBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
@@ -20,9 +21,11 @@ class PostAdapter(private val postList : ArrayList<Posts>) : RecyclerView.Adapte
         return postList.size
     }
 
-    override fun onBindViewHolder(holder: PostHolder, position: Int) {
-        holder.binding.feedKullaniciAdi.text = postList[position].email
-        holder.binding.recyclerCommentText.text = postList[position].comment
-        Picasso.get().load(postList[position].imageUrl).into(holder.binding.recyclerImageView)
+    override fun onBindViewHolder(holder: PostHolder, position: Int) = with(holder.binding){
+        val post = postList[position]
+        feedKullaniciAdi.text = post.kullaniciAdi
+        recyclerCommentText.text = post.comment
+        Picasso.get().load(post.imageUrl).into(recyclerImageView)
+        feedPostTarih.text = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(post.time)
     }
 }

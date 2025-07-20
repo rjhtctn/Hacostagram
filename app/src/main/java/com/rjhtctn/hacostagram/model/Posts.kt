@@ -1,3 +1,10 @@
 package com.rjhtctn.hacostagram.model
 
-data class Posts(val email: String, val comment: String, val imageUrl: String )
+import java.util.Date
+
+data class Posts(
+    val kullaniciAdi: String,
+    val comment: String,
+    val imageUrl: String,
+    val time: Date
+)

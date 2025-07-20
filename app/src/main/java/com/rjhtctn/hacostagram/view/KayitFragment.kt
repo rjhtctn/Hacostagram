@@ -13,12 +13,15 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Source
 import com.google.firebase.ktx.Firebase
 import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.FragmentKayitBinding
+import java.util.regex.Pattern
 
 class KayitFragment : Fragment() {
     private var _binding: FragmentKayitBinding? = null
@@ -28,7 +31,6 @@ class KayitFragment : Fragment() {
     private lateinit var soyisim: String
     private lateinit var kullaniciAdi: String
     private lateinit var email: String
-    private lateinit var uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,64 +38,57 @@ class KayitFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentKayitBinding.inflate(inflater,container, false)
-        val view = binding.root
-        return view
+    ): View {
+        _binding = FragmentKayitBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            kayitButon.setOnClickListener { kayitOl() }
-            kayitVisibility.setOnClickListener { sifreGoster() }
-            kayittanGiriseButon.setOnClickListener {
-                view.findNavController()
-                    .navigate(KayitFragmentDirections.actionKayitFragmentToGirisFragment())
-            }
-            binding.kayitEmail.doAfterTextChanged { text ->
-                if (text != null && !Patterns.EMAIL_ADDRESS.matcher(text).matches()) {
-                    binding.kayitEmail.error = "Geçerli e‑posta formatı"
-                }
+
+        kayitButon.setOnClickListener { kayitOl() }
+        kayitVisibility.setOnClickListener { sifreGoster() }
+        kayittanGiriseButon.setOnClickListener {
+            view.findNavController()
+                .navigate(KayitFragmentDirections.actionKayitFragmentToGirisFragment())
+        }
+
+        kayitEmail.doAfterTextChanged { text ->
+            if (text != null && !Patterns.EMAIL_ADDRESS.matcher(text).matches()) {
+                kayitEmail.error = "Geçersiz e‑posta formatı"
             }
         }
     }
-
     private fun sifreGoster() = with(binding) {
         val isHidden = kayitSifre1.transformationMethod is PasswordTransformationMethod
-
         listOf(kayitSifre1, kayitSifre2).forEach { field ->
             field.transformationMethod =
-                if (isHidden) null
-                else PasswordTransformationMethod.getInstance()
+                if (isHidden) null else PasswordTransformationMethod.getInstance()
             field.setSelection(field.text.length)
         }
-
         kayitVisibility.setImageResource(
-            if (isHidden)
-                R.drawable.visibility
-            else
-                R.drawable.visibility_off
+            if (isHidden) R.drawable.visibility
+            else R.drawable.visibility_off
         )
     }
 
-    private fun kayitOl() = with(binding){
+    private fun kayitOl() = with(binding) {
         email = kayitEmail.text.toString().trim()
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             toast("Geçerli bir e‑posta adresi girin!")
-            kayitButon.isEnabled = true
             return@with
         }
-        kayitButon.isEnabled = false
+
         isim = kayitIsim.text.toString().trim()
         soyisim = kayitSoyisim.text.toString().trim()
         kullaniciAdi = kayitKullaniciAdi.text.toString().trim()
         val sifre1 = kayitSifre1.text.toString()
         val sifre2 = kayitSifre2.text.toString()
 
-        if (listOf(isim, soyisim, kullaniciAdi, email, sifre1, sifre2).any {it.isEmpty()}) {
+        if (listOf(isim, soyisim, kullaniciAdi, email, sifre1, sifre2).any { it.isEmpty() }) {
             toast("Boş Alan Bırakmayın!")
             return@with
         }
@@ -101,55 +96,77 @@ class KayitFragment : Fragment() {
             toast("Şifreler Uyuşmuyor!")
             return@with
         }
-        Firebase.firestore.collection("users").whereEqualTo("kullaniciAdi", kullaniciAdi)
-            .get().addOnSuccessListener { snapshot ->
-                if (!snapshot.isEmpty) {
-                    toast("Bu kullanıcı adı zaten alınmış!")
-                    kayitButon.isEnabled = true
-                } else {
-                    auth.createUserWithEmailAndPassword(email,sifre1).addOnCompleteListener{ task ->
-                        if (!task.isSuccessful) {
-                            toast(task.exception?.localizedMessage ?: "Auth hatası")
-                            return@addOnCompleteListener
-                        }
-                        val uuid = task.result?.user?.uid
-                        if(uuid == null) {
-                            auth.currentUser?.delete()
-                            toast("Kayıt başarısız, lütfen tekrar deneyin!")
-                            return@addOnCompleteListener
-                        }
-                        this@KayitFragment.uid = uuid
-                        firestoreKaydet()
-                    }.addOnFailureListener { e ->
-                        toast("Auth Hatası: ${e.localizedMessage}")
-                        kayitButon.isEnabled = true
-                    }
-                }
-            }.addOnFailureListener { e ->
-                toast("Kullanıcı adı kontrolü başarısız: ${e.localizedMessage}")
+
+        val idRegex: Pattern = Pattern.compile("^[a-zA-Z0-9._-]{3,30}$")
+        if (!idRegex.matcher(kullaniciAdi).matches()) {
+            toast("Kullanıcı adı sadece harf, sayı, . _ - içerebilir (3‑30 karakter)!")
+            return@with
+        }
+
+        kayitButon.isEnabled = false
+
+        val db = FirebaseFirestore.getInstance()
+        val nameRef: DocumentReference = db.collection("usernames").document(kullaniciAdi)
+
+        nameRef.get(Source.SERVER).addOnSuccessListener { snap ->
+            if (snap.exists()) {
+                toast("Bu kullanıcı adı alınmış!")
                 kayitButon.isEnabled = true
+                return@addOnSuccessListener
             }
-    }
-    private fun firestoreKaydet() {
-        val user = hashMapOf(
-            "isVerified" to "false",
-            "isim"     to isim,
-            "soyisim"  to soyisim,
-            "kullaniciAdi"   to kullaniciAdi,
-            "email" to email,
-            "userId"    to uid,
-            "createdAt" to FieldValue.serverTimestamp()
-        )
-        com.google.firebase.Firebase.firestore.collection("users")
-            .document(uid)
-            .set(user)
-            .addOnSuccessListener {
-                toast("Kayıt Başarılı!")
-                findNavController().navigate(KayitFragmentDirections.actionKayitFragmentToGirisFragment())
-            }.addOnFailureListener { e ->
-                auth.currentUser?.delete()
-                toast("Firestore Hatası: ${e.localizedMessage}")
-            }
+            auth.createUserWithEmailAndPassword(email, sifre1)
+                .addOnSuccessListener { cred ->
+                    val user = cred.user!!
+                    val uid = user.uid
+                    db.runTransaction { tx ->
+                        if (tx.get(nameRef).exists()) {
+                            throw FirebaseFirestoreException(
+                                "Kullanıcı adı dolu",
+                                FirebaseFirestoreException.Code.ABORTED
+                            )
+                        }
+
+                        tx.set(nameRef, mapOf("uid" to uid, "email" to email))
+
+                        tx.set(
+                            db.collection("users").document(uid),
+                            mapOf(
+                                "isim" to isim,
+                                "soyisim" to soyisim,
+                                "kullaniciAdi" to kullaniciAdi,
+                                "email" to email,
+                                "userId" to uid,
+                                "createdAt" to FieldValue.serverTimestamp(),
+                                "emailVerified" to false
+                            )
+                        )
+                    }.addOnSuccessListener {
+                        user.sendEmailVerification().addOnSuccessListener {
+                            Firebase.auth.signOut()
+                            toast("Doğrulama E-Postası Gönderildi!")
+                            findNavController().navigate(
+                                KayitFragmentDirections.actionKayitFragmentToGirisFragment()
+                            )
+                        }.addOnFailureListener { mailErr ->
+                            user.delete()
+                            toast("E‑posta gönderilemedi: ${mailErr.localizedMessage}")
+                            kayitButon.isEnabled = true
+                        }
+                    }
+                        .addOnFailureListener { e ->
+                            user.delete()
+                            toast("Kayıt hatası: ${e.localizedMessage}")
+                            kayitButon.isEnabled = true
+                        }
+                }
+                .addOnFailureListener { e ->
+                    toast("Auth Hatası: ${e.localizedMessage}")
+                    kayitButon.isEnabled = true
+                }
+        }.addOnFailureListener { e ->
+            toast("Bağlantı Hatası: ${e.localizedMessage}")
+            kayitButon.isEnabled = true
+        }
     }
 
     private fun toast(msg: String) =

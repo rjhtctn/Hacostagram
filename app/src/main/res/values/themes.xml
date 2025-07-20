@@ -1,9 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
     <style name="Base.Theme.hacostagram" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">#000000</item>
         <item name="colorOnPrimary">#FFFFFF</item>
     </style>
-
     <style name="Theme.hacostagram" parent="Base.Theme.hacostagram" />
 </resources>

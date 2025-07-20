@@ -1,6 +1,5 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Saydam arka plan -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@android:color/transparent" />
