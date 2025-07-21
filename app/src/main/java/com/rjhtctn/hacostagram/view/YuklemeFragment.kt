@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.InputFilter
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -58,6 +59,24 @@ class YuklemeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.uploadButton.setOnClickListener { yukleButton() }
         binding.uploadImageView.setOnClickListener { gorselSec(it) }
+        binding.uploadCommentEditText.filters = arrayOf(
+            InputFilter { source, _, _, dest, dstart, dend ->
+                val result = dest
+                    .replaceRange(dstart, dend, source.toString())
+                if (result.isEmpty()) return@InputFilter null
+
+                val words = result.split("\\s+".toRegex())
+                if (words.any { it.length > 30 }) {
+                    toast("Lütfen kelime başına en fazla 30 karakter girin.")
+                    return@InputFilter ""   // bu karakteri ekleme
+                }
+                if (source.any { it.isISOControl() && it != '\n' }) {
+                    toast("Geçersiz karakter kullandınız.")
+                    return@InputFilter ""
+                }
+                null
+            })
+        binding.uploadCommentEditText.setHorizontallyScrolling(false)
     }
 
     private fun gorselSec(view: View) {
@@ -95,6 +114,26 @@ class YuklemeFragment : Fragment() {
     }
     private fun handleSelected(uri: Uri) {
         secilenGorsel = uri
+        val stream = requireContext().contentResolver.openInputStream(secilenGorsel!!)
+            ?: run {toast("Dosya açılamadı"); return}
+        val header = ByteArray(3)
+        val read = stream.read(header)
+        stream.close()
+        if (read < 3) {
+            toast("Dosya geçerli bir resim değil")
+            return
+        }
+        if (header[0] != 0xFF.toByte() ||
+            header[1] != 0xD8.toByte() ||
+            header[2] != 0xFF.toByte()) {
+            toast("Seçtiğiniz dosya gerçek bir JPEG değil")
+            return
+        }
+        val mime = requireContext().contentResolver.getType(secilenGorsel!!)
+        if (mime == null || !mime.startsWith("image/")) {
+            toast("Lütfen gerçek bir resim dosyası seçin")
+            return
+        }
         binding.uploadImageView.imageTintList = null
         binding.uploadImageView.setImageURI(uri)
 
@@ -126,9 +165,10 @@ class YuklemeFragment : Fragment() {
         ) { uri -> uri?.let { handleSelected(it) } }
     }
     private fun yukleButton() {
-        binding.uploadButton.isEnabled = false
+        setButtonLoading(true)
         if (secilenGorsel == null) {
             Toast.makeText(requireContext(), "Önce fotoğraf seçin", Toast.LENGTH_SHORT).show()
+            setButtonLoading(false)
             return
         }
 
@@ -146,6 +186,7 @@ class YuklemeFragment : Fragment() {
                 override fun onError(reqId: String?, err: ErrorInfo?) {
                     Toast.makeText(requireContext(),
                         "Yükleme hatası: ${err?.description}", Toast.LENGTH_LONG).show()
+                    setButtonLoading(false)
                 }
                 override fun onReschedule(reqId: String?, err: ErrorInfo?) {}
             })
@@ -154,11 +195,15 @@ class YuklemeFragment : Fragment() {
 
     private fun firestoreKaydet(url: String) {
         val uid = auth.currentUser?.uid ?: run {
-            toast("Oturum Kapandı!"); return
+            toast("Oturum Kapandı!")
+            setButtonLoading(false)
+            return
         }
         val db = Firebase.firestore
         db.collection("users").document(uid).get(Source.SERVER)
             .addOnSuccessListener { snap ->
+                val postsRef = Firebase.firestore.collection("posts").document()
+                val newId = postsRef.id
                 val username = snap.getString("kullaniciAdi") ?: ""
                 val post = hashMapOf(
                     "email"     to auth.currentUser?.email,
@@ -166,23 +211,31 @@ class YuklemeFragment : Fragment() {
                     "comment"   to binding.uploadCommentEditText.text.toString(),
                     "userId"    to auth.currentUser?.uid,
                     "kullaniciAdi" to username,
-                    "createdAt" to FieldValue.serverTimestamp()
+                    "createdAt" to FieldValue.serverTimestamp(),
+                    "id" to newId
                 )
 
-                Firebase.firestore.collection("posts")
-                    .add(post)
+
+                    postsRef.set(post)
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "Paylaşıldı!", Toast.LENGTH_SHORT).show()
                         findNavController().navigateUp()
                     }.addOnFailureListener { e ->
                         toast("Firestore hata: ${e.localizedMessage}")
-                        binding.uploadButton.isEnabled = true
+                            setButtonLoading(false)
                     }
             }.addOnFailureListener { e ->
                 toast("Profili okuyamadım: ${e.localizedMessage}")
-                binding.uploadButton.isEnabled = true
+                setButtonLoading(false)
             }
     }
+
+    private fun setButtonLoading(isLoading: Boolean) {
+        requireActivity().runOnUiThread {
+            binding.uploadButton.isEnabled = !isLoading
+        }
+    }
+
     private fun toast(msg: String) =
         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
 

@@ -14,24 +14,26 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
                 android:id="@+id/profilKullaniciAdi"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
                 android:text="kullaniciadi"
-                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/profilResmi"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/profilMenuButon"
                 android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_centerVertical="true"
@@ -39,13 +41,11 @@
                 android:background="@null"
                 android:contentDescription="@null"
                 app:layout_constraintHorizontal_bias="0.144"
-                app:tint="?attr/colorControlNormal"
+                app:tint="?attr/colorOnSurface"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/menu"
+                android:src="@drawable/ic_menu"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -53,12 +53,26 @@
                 android:id="@+id/profilIsimSoyisim"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
                 android:text="Ad Soyad"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/profilKullaniciAdi"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toEndOf="@+id/profilResmi"
+                app:layout_constraintTop_toBottomOf="@id/profilKullaniciAdi" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profilResmi"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:foregroundGravity="center"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/CircleImageView"
+                app:srcCompat="@drawable/ic_profile"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -71,8 +85,8 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        app:menu="@menu/profile_menu"/>
+        app:menu="@menu/menu_profile"/>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -10,11 +10,12 @@
     <EditText
         android:id="@+id/kayit_isim"
         android:layout_width="0dp"
-        android:textColorHint="#B1000000"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:autofillHints=""
         android:ems="10"
         android:hint="Adınızı Girin"
@@ -22,17 +23,17 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayit_baslik"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayit_baslik"/>
 
     <EditText
         android:id="@+id/kayit_soyisim"
-        android:textColorHint="#B1000000"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:autofillHints=""
         android:ems="10"
         android:hint="Soyadınızı Girin"
@@ -40,26 +41,25 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayit_isim"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayit_isim"/>
 
     <EditText
         android:id="@+id/kayit_kullanici_adi"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:textColorHint="#B1000000"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:autofillHints=""
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
         android:hint="Kullanıcı Adınızı Oluşturun"
         android:inputType="text"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayit_soyisim"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayit_soyisim"/>
 
     <EditText
         android:id="@+id/kayit_email"
@@ -67,17 +67,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
-        android:textColorHint="#B1000000"
         android:layout_marginEnd="40dp"
         android:autofillHints=""
         android:ems="10"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:hint="E-Posta Adresinizi Girin"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayit_kullanici_adi"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayit_kullanici_adi"/>
 
     <EditText
         android:id="@+id/kayit_sifre_1"
@@ -85,17 +85,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
-        android:textColorHint="#B1000000"
         android:layout_marginEnd="40dp"
         android:autofillHints=""
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
         android:hint="Şifre Oluşturun"
         android:inputType="textPassword"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayit_email"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayit_email" />
 
     <EditText
         android:id="@+id/kayit_sifre_2"
@@ -107,13 +107,13 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="Şifreyi Doğrulayın"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColorHint="#B1000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayit_sifre_1"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayit_sifre_1" />
 
     <ImageButton
         android:id="@+id/kayitVisibility"
@@ -127,12 +127,12 @@
         android:contentDescription="@null"
         android:padding="0dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/visibility_off"
+        android:src="@drawable/ic_visibility_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.144"
         app:layout_constraintStart_toEndOf="@+id/kayit_sifre_1"
         app:layout_constraintTop_toBottomOf="@+id/kayit_sifre_1"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
@@ -143,13 +143,13 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:text="Kayıt Ekranı"
+        android:textColor="?attr/colorOnSurface"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/kayitButon"
@@ -157,7 +157,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_height="wrap_content"
-        android:background="@drawable/buton_background"
+        android:background="@drawable/button_background"
+        android:textColor="?attr/colorOnPrimary"
         android:layout_marginTop="15dp"
         android:text="Kayıt Ol"
         app:layout_constraintEnd_toEndOf="parent"
@@ -174,10 +175,10 @@
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
+        android:textColor="?attr/colorPrimary"
         android:text="Kaydınız Var Mı? Giriş Sayfasına Gidin."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kayitButon"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/kayitButon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

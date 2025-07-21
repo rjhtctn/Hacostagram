@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.findNavController
 import com.rjhtctn.hacostagram.R
 class KayitSilFragment : Fragment() {
 
@@ -19,5 +21,4 @@ class KayitSilFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_kayit_sil, container, false)
     }
-
 }

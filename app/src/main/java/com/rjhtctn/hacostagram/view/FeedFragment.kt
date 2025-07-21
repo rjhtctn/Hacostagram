@@ -64,11 +64,11 @@ class FeedFragment : Fragment() {
                         postList.clear()
                         val documents = value.documents
                         for (document in documents) {
-                            val comment = document.get("comment") as String
-                            val userName = document.get("kullaniciAdi") as String
-                            val imageUrl = document.get("imageUrl") as String
+                            val comment = document.getString("comment") ?: ""
+                            val userName = document.getString("kullaniciAdi") ?: ""
+                            val imageUrl = document.getString("imageUrl") ?: ""
                             val time = document.getTimestamp("createdAt")?.toDate() ?: Date()
-                            val post = Posts(userName, comment, imageUrl, time)
+                            val post = Posts("",userName, comment, imageUrl, time)
                             postList.add(post)
                         }
                         adapter?.notifyDataSetChanged()

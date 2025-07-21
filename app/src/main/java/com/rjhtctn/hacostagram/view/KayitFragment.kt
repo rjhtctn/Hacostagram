@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -49,6 +50,14 @@ class KayitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    view.findNavController()
+                        .navigate(KayitFragmentDirections.actionKayitFragmentToGirisFragment())
+                }
+            })
+
         kayitButon.setOnClickListener { kayitOl() }
         kayitVisibility.setOnClickListener { sifreGoster() }
         kayittanGiriseButon.setOnClickListener {
@@ -70,30 +79,20 @@ class KayitFragment : Fragment() {
             field.setSelection(field.text.length)
         }
         kayitVisibility.setImageResource(
-            if (isHidden) R.drawable.visibility
-            else R.drawable.visibility_off
+            if (isHidden) R.drawable.ic_visibility
+            else R.drawable.ic_visibility_off
         )
     }
 
     private fun kayitOl() = with(binding) {
         email = kayitEmail.text.toString().trim()
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            toast("Geçerli bir e‑posta adresi girin!")
-            return@with
-        }
-
         isim = kayitIsim.text.toString().trim()
         soyisim = kayitSoyisim.text.toString().trim()
         kullaniciAdi = kayitKullaniciAdi.text.toString().trim()
         val sifre1 = kayitSifre1.text.toString()
         val sifre2 = kayitSifre2.text.toString()
-
         if (listOf(isim, soyisim, kullaniciAdi, email, sifre1, sifre2).any { it.isEmpty() }) {
             toast("Boş Alan Bırakmayın!")
-            return@with
-        }
-        if (sifre1 != sifre2) {
-            toast("Şifreler Uyuşmuyor!")
             return@with
         }
 
@@ -103,7 +102,17 @@ class KayitFragment : Fragment() {
             return@with
         }
 
-        kayitButon.isEnabled = false
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            toast("Geçerli bir e‑posta adresi girin!")
+            return@with
+        }
+
+        if (sifre1 != sifre2) {
+            toast("Şifreler Uyuşmuyor!")
+            return@with
+        }
+
+        setButtonLoading(true)
 
         val db = FirebaseFirestore.getInstance()
         val nameRef: DocumentReference = db.collection("usernames").document(kullaniciAdi)
@@ -111,7 +120,7 @@ class KayitFragment : Fragment() {
         nameRef.get(Source.SERVER).addOnSuccessListener { snap ->
             if (snap.exists()) {
                 toast("Bu kullanıcı adı alınmış!")
-                kayitButon.isEnabled = true
+                setButtonLoading(false)
                 return@addOnSuccessListener
             }
             auth.createUserWithEmailAndPassword(email, sifre1)
@@ -150,22 +159,27 @@ class KayitFragment : Fragment() {
                         }.addOnFailureListener { mailErr ->
                             user.delete()
                             toast("E‑posta gönderilemedi: ${mailErr.localizedMessage}")
-                            kayitButon.isEnabled = true
+                            setButtonLoading(false)
                         }
                     }
                         .addOnFailureListener { e ->
                             user.delete()
                             toast("Kayıt hatası: ${e.localizedMessage}")
-                            kayitButon.isEnabled = true
+                            setButtonLoading(false)
                         }
                 }
                 .addOnFailureListener { e ->
                     toast("Auth Hatası: ${e.localizedMessage}")
-                    kayitButon.isEnabled = true
+                    setButtonLoading(false)
                 }
         }.addOnFailureListener { e ->
             toast("Bağlantı Hatası: ${e.localizedMessage}")
-            kayitButon.isEnabled = true
+            setButtonLoading(false)
+        }
+    }
+    private fun setButtonLoading(isLoading: Boolean) {
+        requireActivity().runOnUiThread {
+            binding.kayitButon.isEnabled = !isLoading
         }
     }
 

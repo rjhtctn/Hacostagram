@@ -10,10 +10,11 @@
         android:id="@+id/sifreSifirlaButon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/buton_background"
+        android:background="@drawable/button_background"
         android:text="Şifreyi Sıfırla"
         android:textSize="20sp"
         android:layout_marginTop="15dp"
+        android:textColor="?attr/colorOnPrimary"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +35,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/backButon"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal">
+        android:textColor="?attr/colorOnSurface">
 
     </TextView>
 
@@ -49,12 +50,12 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:hint="Kullanıcı Adınızı Girin"
-        android:textColorHint="#B1000000"
         android:autofillHints=""
         android:ems="10"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:inputType="text"
-        android:minHeight="48dp"
-        app:tint="?attr/colorControlNormal">
+        android:minHeight="48dp">
 
     </EditText>
 
@@ -69,12 +70,12 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:hint="E-Posta Adresinizi Girin"
-        android:textColorHint="#B1000000"
         android:autofillHints=""
         android:ems="10"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        app:tint="?attr/colorControlNormal">
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant">
 
     </EditText>
 
@@ -91,11 +92,11 @@
         android:contentDescription="@null"
         android:padding="0dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/back"
+        android:src="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="@+id/sifreSifirlaBaslik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

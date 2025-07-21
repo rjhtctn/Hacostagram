@@ -1,5 +1,6 @@
 package com.rjhtctn.hacostagram.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import com.cloudinary.android.MediaManager
 import com.rjhtctn.hacostagram.R
 
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val config = hashMapOf("cloud_name" to BuildConfig.CLOUD_NAME)
-        MediaManager.init(this, config)
+            MediaManager.init(this, config)
+
     }
 }

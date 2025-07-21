@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="text">#000000</color>
-    <color name="hint">#8E8E8E</color>
-    <color name="button_bg">#000000</color>
-    <color name="button_text">#FFFFFF</color>
+    <color name="text">#FFFFFF</color>
+    <color name="hint">#B3FFFFFF</color>
+    <color name="button_bg">#FFFFFF</color>
+    <color name="button_text">#000000</color>
     <color name="colorPrimary">@color/button_bg</color>
     <color name="colorOnPrimary">@color/button_text</color>
-    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurface">#000000</color>
     <color name="colorOnSurface">@color/text</color>
 </resources>

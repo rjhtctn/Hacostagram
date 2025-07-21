@@ -13,8 +13,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/buton_background"
+        android:background="@drawable/button_background"
         android:text="Kayıt Sil"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="20sp"
         tools:ignore="DuplicateSpeakableTextCheck"
         android:textStyle="bold"
@@ -35,12 +36,12 @@
         android:contentDescription="@null"
         android:padding="0dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/visibility_off"
+        android:src="@drawable/ic_visibility_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/kayitSilSifre2"
         app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <EditText
@@ -55,12 +56,12 @@
         android:hint="Şifrenizi Doğrulayın"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColorHint="#B1000000"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/kayitSilSifre"
-        app:tint="?attr/colorControlNormal"
         tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
@@ -78,11 +79,11 @@
         android:contentDescription="@null"
         android:padding="0dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/back"
+        android:src="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="@+id/kayitSilBaslik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
@@ -94,7 +95,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         android:textStyle="bold"
         android:textSize="30sp"
-        app:tint="?attr/colorControlNormal"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -116,11 +117,11 @@
         android:ems="10"
         android:inputType="text"
         android:minHeight="48dp"
-        app:tint="?attr/colorControlNormal"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:layout_marginStart="40dp"
         android:hint="Kullanıcı Adınızı Girin"
         android:autofillHints=""
-        android:textColorHint="#B1000000"
         tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
@@ -138,10 +139,10 @@
         android:ems="10"
         android:autofillHints=""
         android:hint="E-Posta Adresinizi Girin"
-        android:textColorHint="#B1000000"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        app:tint="?attr/colorControlNormal"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         tools:ignore="VisualLintTextFieldSize">
 
     </EditText>
@@ -157,12 +158,12 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:minHeight="48dp"
-        app:tint="?attr/colorControlNormal"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:hint="Şifrenizi Girin"
         android:autofillHints=""
-        android:textColorHint="#B1000000"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         tools:ignore="VisualLintTextFieldSize">
 
     </EditText>

@@ -1,10 +1,12 @@
 package com.rjhtctn.hacostagram.view
 
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +14,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.ktx.Firebase
+import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.FragmentGirisBinding
 
 class GirisFragment : Fragment() {
@@ -43,8 +46,28 @@ class GirisFragment : Fragment() {
                 return
             }
         }
+        binding.girisVisibility.setOnClickListener { sifreGoster(it) }
         binding.girisButton.setOnClickListener { girisYap(it) }
         binding.giristenKayitaButon.setOnClickListener { gecisYap(it) }
+        requireActivity().onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finishAndRemoveTask()
+                }
+            })
+    }
+
+    private fun sifreGoster(view: View) = with(binding) {
+        val isHidden = passwordEditText.transformationMethod is PasswordTransformationMethod
+        listOf(passwordEditText).forEach { field ->
+            field.transformationMethod =
+                if (isHidden) null else PasswordTransformationMethod.getInstance()
+            field.setSelection(field.text.length)
+        }
+        girisVisibility.setImageResource(
+            if (isHidden) R.drawable.ic_visibility
+            else R.drawable.ic_visibility_off
+        )
     }
 
     private fun gecisYap(view: View) {
@@ -57,10 +80,15 @@ class GirisFragment : Fragment() {
         val password = binding.passwordEditText.text.toString()
 
         if (identifier.isEmpty() || password.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "E‑POSTA / KULLANICI ADI VE PAROLA BOŞ BIRAKILAMAZ!", Toast.LENGTH_LONG
-            ).show()
+            toast("E‑POSTA / KULLANICI ADI VE PAROLA BOŞ BIRAKILAMAZ!")
+            return
+        }
+
+        setButtonLoading(true)
+
+        val emailRegex = Regex("^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$", RegexOption.IGNORE_CASE)
+        if (emailRegex.matches(identifier)) {
+            signInWithEmail(identifier, password, view)
             return
         }
 
@@ -70,21 +98,21 @@ class GirisFragment : Fragment() {
         nameRef.get(Source.SERVER)
             .addOnSuccessListener { snap ->
                 if (snap.exists()) {
-                    val email = snap.getString("email") ?: run {
-                        toast("E‑posta kayıtlı değil!"); return@addOnSuccessListener
-                    }
-                    signInWithEmail(email, password, view)
-                } else {
-                    val emailRegex =
-                        Regex("^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$", RegexOption.IGNORE_CASE)
-                    if (emailRegex.matches(identifier)) {
-                        signInWithEmail(identifier, password, view)
+                    val email = snap.getString("email")
+                    if (email != null) {
+                        signInWithEmail(email, password, view)
                     } else {
-                        toast("Kullanıcı adı bulunamadı ve geçerli e‑posta değil!")
+                        toast("E‑posta kayıtlı değil!")
+                        setButtonLoading(false)
                     }
+                } else {
+                    toast("Kullanıcı adı bulunamadı!")
+                    setButtonLoading(false)
+
                 }
+            }.addOnFailureListener { e -> toast(e.localizedMessage ?: "Hata!")
+                setButtonLoading(false)
             }
-            .addOnFailureListener { e -> toast(e.localizedMessage ?: "Hata!") }
     }
     private fun signInWithEmail(email: String, password: String, view: View) {
         auth.signInWithEmailAndPassword(email, password)
@@ -102,11 +130,20 @@ class GirisFragment : Fragment() {
                     } else {
                         cred.user!!.sendEmailVerification()
                         auth.signOut()
+                        setButtonLoading(false)
                         toast("E‑posta doğrulanmamış! Mailinizi onaylayın.")
                     }
-                }
+                }.addOnFailureListener { e -> toast(e.localizedMessage ?: "Giriş hatası!"); setButtonLoading(false) }
+            }.addOnFailureListener { e ->
+                toast(e.localizedMessage ?: "Giriş hatası!")
+                setButtonLoading(false)
             }
-            .addOnFailureListener { e -> toast(e.localizedMessage ?: "Giriş hatası!") }
+    }
+
+    private fun setButtonLoading(isLoading: Boolean) {
+        requireActivity().runOnUiThread {
+            binding.girisButton.isEnabled = !isLoading
+        }
     }
 
     private fun toast(msg: String) =

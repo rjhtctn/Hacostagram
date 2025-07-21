@@ -19,12 +19,12 @@
         android:contentDescription="@null"
         android:padding="0dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/visibility_off"
+        android:src="@drawable/ic_visibility_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toEndOf="@+id/passwordEditText"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <EditText
@@ -35,6 +35,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:autofillHints=""
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
         android:hint="E-Posta veya Kullanıcı Adı Girin"
         android:inputType="textEmailAddress"
@@ -42,8 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/giris_baslik"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/giris_baslik" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -52,6 +53,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:autofillHints=""
         android:ems="10"
         android:hint="Şifrenizi Girin"
@@ -60,18 +63,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/girisButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:background="@drawable/buton_background"
+        android:background="@drawable/button_background"
         android:text="Giriş Yap"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:backgroundTint="@null"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
@@ -83,19 +87,19 @@
         android:layout_marginTop="16dp"
         android:text="Giriş Ekranı"
         android:textAlignment="center"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorControlNormal" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/giristen_kayita_buton"
         android:textAlignment="center"
         android:layout_width="0dp"
-        app:tint="?attr/colorControlNormal"
         android:layout_height="wrap_content"
+        android:textColor="?attr/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginStart="40dp"
