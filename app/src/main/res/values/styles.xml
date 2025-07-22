@@ -4,4 +4,10 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <style name="BottomNav.Clean" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="itemIconSize">24dp</item>
+        <item name="itemHorizontalTranslationEnabled">false</item>
+    </style>
 </resources>

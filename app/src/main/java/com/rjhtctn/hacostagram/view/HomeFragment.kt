@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
 
@@ -24,6 +28,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.homeBottomNav) { v, insets ->
+            insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            v.setPaddingRelative(0, 0, 0, 0)
+            insets
+        }
+        val wantedPx = (40 * resources.displayMetrics.density).toInt()
+        binding.homeBottomNav.layoutParams.height = wantedPx
+        binding.homeBottomNav.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorSurface))
+        binding.homeBottomNav.requestLayout()
         val navHostFragment = childFragmentManager.findFragmentById(binding.homeNavHost.id) as? NavHostFragment
         val navController = navHostFragment?.navController
         if (navController != null) {

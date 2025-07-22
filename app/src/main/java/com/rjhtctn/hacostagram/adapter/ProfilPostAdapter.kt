@@ -1,6 +1,7 @@
 package com.rjhtctn.hacostagram.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,11 @@ class ProfilPostAdapter(private val postList : ArrayList<Posts>) : RecyclerView.
         recyclerCommentText.text = post.comment
         Picasso.get().load(post.imageUrl).into(recyclerImageView)
         feedPostTarih.text = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(post.time)
-
+        if (position == 0) {
+            border.visibility = View.GONE
+        } else {
+            border.visibility = View.VISIBLE
+        }
         imageButton.setOnClickListener { view ->
             PopupMenu(holder.itemView.context, view).apply {
                 menuInflater.inflate(R.menu.menu_post_options, menu)

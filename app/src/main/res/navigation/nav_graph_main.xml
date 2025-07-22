@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/girisFragment">
+
     <fragment
         android:id="@+id/girisFragment"
         android:name="com.rjhtctn.hacostagram.view.GirisFragment"
         android:label="fragment_giris"
-        tools:layout="@layout/fragment_giris" >
+        tools:layout="@layout/fragment_giris">
         <action
             android:id="@+id/action_girisFragment_to_kayitFragment"
             app:destination="@id/kayitFragment"/>
@@ -24,7 +25,7 @@
         android:id="@+id/kayitFragment"
         android:name="com.rjhtctn.hacostagram.view.KayitFragment"
         android:label="fragment_kayit"
-        tools:layout="@layout/fragment_kayit" >
+        tools:layout="@layout/fragment_kayit">
         <action
             android:id="@+id/action_kayitFragment_to_girisFragment"
             app:destination="@id/girisFragment"
@@ -33,78 +34,32 @@
     </fragment>
 
     <fragment
-        android:id="@+id/kayitSilFragment"
-        android:name="com.rjhtctn.hacostagram.view.KayitSilFragment"
-        android:label="fragment_kayit_sil"
-        tools:layout="@layout/fragment_kayit_sil" >
-        <action
-            android:id="@+id/action_kayitSilFragment_to_girisFragment"
-            app:destination="@id/girisFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_kayitSilFragment_to_profilFragment"
-            app:destination="@id/profilFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/profilFragment"
-        android:name="com.rjhtctn.hacostagram.view.ProfilFragment"
-        android:label="ProfilFragment" >
-        <action
-            android:id="@+id/action_profilFragment_to_sifreDegistirFragment"
-            app:destination="@id/sifreDegistirFragment"/>
-        <action
-            android:id="@+id/action_profilFragment_to_kayitSilFragment"
-            app:destination="@id/kayitSilFragment"/>
-        <action
-            android:id="@+id/action_profilFragment_to_girisFragment"
-            app:destination="@id/girisFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/sifreDegistirFragment"
-        android:name="com.rjhtctn.hacostagram.view.SifreDegistirFragment"
-        android:label="fragment_sifre_degistir"
-        tools:layout="@layout/fragment_sifre_degistir" >
-        <action
-            android:id="@+id/action_sifreDegistirFragment_to_profilFragment"
-            app:destination="@id/profilFragment"
-            app:popUpTo="@+id/profilFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-
-    <fragment
         android:id="@+id/sifreSifirlamaFragment"
         android:name="com.rjhtctn.hacostagram.view.SifreSifirlamaFragment"
         android:label="fragment_sifre_sifirlama"
-        tools:layout="@layout/fragment_sifre_sifirlama" >
+        tools:layout="@layout/fragment_sifre_sifirlama">
         <action
             android:id="@+id/action_sifreSifirlamaFragment_to_girisFragment"
             app:destination="@id/girisFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true"/>
     </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.rjhtctn.hacostagram.view.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_profilFragment"
-            app:destination="@id/profilFragment"/>
-        <action
             android:id="@+id/action_homeFragment_to_girisFragment"
             app:destination="@id/girisFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true"/>
     </fragment>
+
     <action
         android:id="@+id/action_global_girisFragment"
         app:destination="@id/girisFragment"
         app:popUpTo="@id/nav_graph"
-        app:popUpToInclusive="true"
-        />
+        app:popUpToInclusive="true"/>
 </navigation>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.rjhtctn.hacostagram.adapter.PostAdapter
@@ -19,7 +20,7 @@ import com.rjhtctn.hacostagram.model.Posts
 import java.util.Date
 
 class FeedFragment : Fragment() {
-
+    private var userDataListener: ListenerRegistration? = null
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = _binding!!
 
@@ -46,15 +47,16 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        firestoreVeriAl()
         adapter = PostAdapter(postList)
         binding.feedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.feedRecyclerView.adapter = adapter
+        firestoreVeriAl()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun firestoreVeriAl() {
-        Firebase.firestore.collection("posts").orderBy("createdAt" ,Query.Direction.DESCENDING).addSnapshotListener{ value , error ->
+        userDataListener?.remove()
+        userDataListener = Firebase.firestore.collection("posts").orderBy("createdAt" ,Query.Direction.DESCENDING).addSnapshotListener{ value, error ->
             if (error != null) {
                 Toast.makeText(requireContext(),error.localizedMessage,Toast.LENGTH_LONG).show()
             }
@@ -64,12 +66,22 @@ class FeedFragment : Fragment() {
                         postList.clear()
                         val documents = value.documents
                         for (document in documents) {
-                            val comment = document.getString("comment") ?: ""
-                            val userName = document.getString("kullaniciAdi") ?: ""
-                            val imageUrl = document.getString("imageUrl") ?: ""
-                            val time = document.getTimestamp("createdAt")?.toDate() ?: Date()
-                            val post = Posts("",userName, comment, imageUrl, time)
+                            val post = Posts(
+                                id = "",
+                                kullaniciAdi = document.getString("kullaniciAdi") ?: "",
+                                comment      = document.getString("comment") ?: "",
+                                imageUrl     = document.getString("imageUrl") ?: "",
+                                time         = document.getTimestamp("createdAt")?.toDate() ?: Date(),
+                                profilePhotoUrl = null
+                            )
                             postList.add(post)
+                            Firebase.firestore.collection("usersPublic").document(post.kullaniciAdi)
+                                .get()
+                                .addOnSuccessListener { userDoc ->
+                                    val url = userDoc.getString("profilePhoto") ?: ""
+                                    post.profilePhotoUrl = url
+                                    adapter?.notifyItemChanged(postList.indexOf(post))
+                                }
                         }
                         adapter?.notifyDataSetChanged()
                     }
@@ -80,6 +92,8 @@ class FeedFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        userDataListener?.remove()
         _binding = null
+        adapter = null
     }
 }

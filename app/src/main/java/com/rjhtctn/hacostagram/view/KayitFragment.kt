@@ -14,10 +14,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
 import com.google.firebase.ktx.Firebase
 import com.rjhtctn.hacostagram.R
@@ -67,7 +65,7 @@ class KayitFragment : Fragment() {
 
         kayitEmail.doAfterTextChanged { text ->
             if (text != null && !Patterns.EMAIL_ADDRESS.matcher(text).matches()) {
-                kayitEmail.error = "Geçersiz e‑posta formatı"
+                kayitEmail.error = "GEÇERSİZ E-POSTA FORMATI"
             }
         }
     }
@@ -92,7 +90,7 @@ class KayitFragment : Fragment() {
         val sifre1 = kayitSifre1.text.toString()
         val sifre2 = kayitSifre2.text.toString()
         if (listOf(isim, soyisim, kullaniciAdi, email, sifre1, sifre2).any { it.isEmpty() }) {
-            toast("Boş Alan Bırakmayın!")
+            toast("BOŞ ALAN BIRAKMAYIN")
             return@with
         }
 
@@ -103,23 +101,23 @@ class KayitFragment : Fragment() {
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            toast("Geçerli bir e‑posta adresi girin!")
+            toast("GEÇERLİ BİR E-POSTA ADRESİ GİRİN")
             return@with
         }
 
         if (sifre1 != sifre2) {
-            toast("Şifreler Uyuşmuyor!")
+            toast("ŞİFRELER UYUŞMUYOR")
             return@with
         }
 
         setButtonLoading(true)
 
         val db = FirebaseFirestore.getInstance()
-        val nameRef: DocumentReference = db.collection("usernames").document(kullaniciAdi)
+        val usernames = db.collection("usernames").document(kullaniciAdi)
 
-        nameRef.get(Source.SERVER).addOnSuccessListener { snap ->
+        usernames.get(Source.SERVER).addOnSuccessListener { snap ->
             if (snap.exists()) {
-                toast("Bu kullanıcı adı alınmış!")
+                toast("BU KULLANICI ADI ALINMIŞ")
                 setButtonLoading(false)
                 return@addOnSuccessListener
             }
@@ -128,52 +126,55 @@ class KayitFragment : Fragment() {
                     val user = cred.user!!
                     val uid = user.uid
                     db.runTransaction { tx ->
-                        if (tx.get(nameRef).exists()) {
-                            throw FirebaseFirestoreException(
-                                "Kullanıcı adı dolu",
-                                FirebaseFirestoreException.Code.ABORTED
-                            )
+                        if (tx.get(usernames).exists()) {
+                            toast("BU KULLANICI ADI ALINMIŞ")
                         }
 
-                        tx.set(nameRef, mapOf("uid" to uid, "email" to email))
+                        tx.set(usernames,mapOf("email" to email))
 
                         tx.set(
-                            db.collection("users").document(uid),
+                            db.collection("usersPrivate").document(uid),
                             mapOf(
-                                "isim" to isim,
-                                "soyisim" to soyisim,
                                 "kullaniciAdi" to kullaniciAdi,
                                 "email" to email,
                                 "userId" to uid,
                                 "createdAt" to FieldValue.serverTimestamp(),
-                                "emailVerified" to false
+                                "emailVerified" to false,
                             )
                         )
+
+                        tx.set(db.collection("usersPublic").document(kullaniciAdi),
+                            mapOf(
+                                "isim" to isim,
+                                "soyisim" to soyisim,
+                                "kullaniciAdi" to kullaniciAdi,
+                                "profilePhoto" to ""
+                            ))
                     }.addOnSuccessListener {
                         user.sendEmailVerification().addOnSuccessListener {
                             Firebase.auth.signOut()
-                            toast("Doğrulama E-Postası Gönderildi!")
+                            toast("DOĞRULAMA E-POSTASI GÖNDERİLDİ")
                             findNavController().navigate(
                                 KayitFragmentDirections.actionKayitFragmentToGirisFragment()
                             )
                         }.addOnFailureListener { mailErr ->
                             user.delete()
-                            toast("E‑posta gönderilemedi: ${mailErr.localizedMessage}")
+                            toast("DOĞRULAMA E-POSTASI GÖNDERİLEMEDİ: ${mailErr.localizedMessage}")
                             setButtonLoading(false)
                         }
                     }
                         .addOnFailureListener { e ->
                             user.delete()
-                            toast("Kayıt hatası: ${e.localizedMessage}")
+                            toast("KAYIT HATASI: ${e.localizedMessage}")
                             setButtonLoading(false)
                         }
                 }
                 .addOnFailureListener { e ->
-                    toast("Auth Hatası: ${e.localizedMessage}")
+                    toast("KAYIT HATASI: ${e.localizedMessage}")
                     setButtonLoading(false)
                 }
         }.addOnFailureListener { e ->
-            toast("Bağlantı Hatası: ${e.localizedMessage}")
+            toast("KAYIT HATASI: ${e.localizedMessage}")
             setButtonLoading(false)
         }
     }

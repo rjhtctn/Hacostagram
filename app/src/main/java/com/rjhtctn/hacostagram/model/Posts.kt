@@ -6,5 +6,6 @@ data class Posts(
     val kullaniciAdi: String,
     val comment: String,
     val imageUrl: String,
-    val time: Date
+    val time: Date,
+    var profilePhotoUrl: String? = null
 )

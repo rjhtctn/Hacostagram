@@ -2,13 +2,10 @@ package com.rjhtctn.hacostagram.view
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import com.google.firebase.firestore.Source
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.InputFilter
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -39,7 +36,6 @@ class YuklemeFragment : Fragment() {
     private lateinit var photoPicker: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var safPicker: ActivityResultLauncher<Array<String>>
     private var secilenGorsel: Uri? = null
-    private var secilenBitmap: Bitmap? = null
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,15 +132,6 @@ class YuklemeFragment : Fragment() {
         }
         binding.uploadImageView.imageTintList = null
         binding.uploadImageView.setImageURI(uri)
-
-        secilenBitmap = if (Build.VERSION.SDK_INT >= 28) {
-            ImageDecoder.decodeBitmap(
-                ImageDecoder.createSource(requireActivity().contentResolver, uri))
-        } else {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(
-                requireActivity().contentResolver, uri)
-        }
     }
     private fun registerLaunchers() {
 
@@ -200,29 +187,27 @@ class YuklemeFragment : Fragment() {
             return
         }
         val db = Firebase.firestore
-        db.collection("users").document(uid).get(Source.SERVER)
+        db.collection("usersPrivate").document(uid).get(Source.SERVER)
             .addOnSuccessListener { snap ->
                 val postsRef = Firebase.firestore.collection("posts").document()
                 val newId = postsRef.id
                 val username = snap.getString("kullaniciAdi") ?: ""
                 val post = hashMapOf(
-                    "email"     to auth.currentUser?.email,
                     "imageUrl"  to url.replace("upload/", "upload/q_auto,f_auto/"),
                     "comment"   to binding.uploadCommentEditText.text.toString(),
-                    "userId"    to auth.currentUser?.uid,
                     "kullaniciAdi" to username,
                     "createdAt" to FieldValue.serverTimestamp(),
                     "id" to newId
                 )
 
 
-                    postsRef.set(post)
+                postsRef.set(post)
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "Paylaşıldı!", Toast.LENGTH_SHORT).show()
                         findNavController().navigateUp()
                     }.addOnFailureListener { e ->
                         toast("Firestore hata: ${e.localizedMessage}")
-                            setButtonLoading(false)
+                        setButtonLoading(false)
                     }
             }.addOnFailureListener { e ->
                 toast("Profili okuyamadım: ${e.localizedMessage}")

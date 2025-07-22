@@ -52,7 +52,7 @@ class GirisFragment : Fragment() {
         requireActivity().onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    requireActivity().finishAndRemoveTask()
+                    requireActivity().moveTaskToBack(true)
                 }
             })
     }
@@ -102,11 +102,11 @@ class GirisFragment : Fragment() {
                     if (email != null) {
                         signInWithEmail(email, password, view)
                     } else {
-                        toast("E‑posta kayıtlı değil!")
+                        toast("KULLANICI ADI VEYA ŞİFRE YANLIŞ")
                         setButtonLoading(false)
                     }
                 } else {
-                    toast("Kullanıcı adı bulunamadı!")
+                    toast("KULLANICI ADI VEYA ŞİFRE YANLIŞ")
                     setButtonLoading(false)
 
                 }
@@ -124,7 +124,7 @@ class GirisFragment : Fragment() {
                             .also { view.findNavController().navigate(it) }
 
                         FirebaseFirestore.getInstance()
-                            .collection("users")
+                            .collection("usersPrivate")
                             .document(cred.user!!.uid)
                             .update("emailVerified", true)
                     } else {
@@ -133,7 +133,7 @@ class GirisFragment : Fragment() {
                         setButtonLoading(false)
                         toast("E‑posta doğrulanmamış! Mailinizi onaylayın.")
                     }
-                }.addOnFailureListener { e -> toast(e.localizedMessage ?: "Giriş hatası!"); setButtonLoading(false) }
+                }.addOnFailureListener { toast( "KULLANICI ADI VEYA ŞİFRE YANLIŞ"); setButtonLoading(false) }
             }.addOnFailureListener { e ->
                 toast(e.localizedMessage ?: "Giriş hatası!")
                 setButtonLoading(false)

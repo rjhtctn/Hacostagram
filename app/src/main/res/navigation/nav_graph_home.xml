@@ -1,21 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
     app:startDestination="@id/feedFragment">
+    <fragment
+        android:id="@+id/yuklemeFragment"
+        android:name="com.rjhtctn.hacostagram.view.YuklemeFragment"
+        android:label="Paylaş"
+        tools:layout="@layout/fragment_yukleme" />
 
     <fragment
         android:id="@+id/feedFragment"
         android:name="com.rjhtctn.hacostagram.view.FeedFragment"
-        android:label="Feed" />
-
-    <fragment
-        android:id="@+id/yuklemeFragment"
-        android:name="com.rjhtctn.hacostagram.view.YuklemeFragment"
-        android:label="Paylaş" />
-
+        android:label="Ana Sayfa"
+        tools:layout="@layout/fragment_feed" />
     <fragment
         android:id="@+id/profilFragment"
         android:name="com.rjhtctn.hacostagram.view.ProfilFragment"
-        android:label="Profil" />
+        android:label="Profil"
+        tools:layout="@layout/fragment_profil">
+        <action
+            android:id="@+id/action_profilFragment_to_kayitSilFragment"
+            app:destination="@id/kayitSilFragment" />
+        <action
+            android:id="@+id/action_profilFragment_to_sifreDegistirFragment"
+            app:destination="@id/sifreDegistirFragment" />
+        <action
+            android:id="@+id/action_profilFragment_to_hesapDetayFragment"
+            app:destination="@id/hesapDetayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kayitSilFragment"
+        android:name="com.rjhtctn.hacostagram.view.KayitSilFragment"
+        android:label="Hesap Sil"
+        tools:layout="@layout/fragment_kayit_sil">
+        <action
+            android:id="@+id/action_kayitSilFragment_to_profilFragment"
+            app:destination="@id/profilFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/sifreDegistirFragment"
+        android:name="com.rjhtctn.hacostagram.view.SifreDegistirFragment"
+        android:label="Şifre Değiştir"
+        tools:layout="@layout/fragment_sifre_degistir">
+        <action
+            android:id="@+id/action_sifreDegistirFragment_to_profilFragment"
+            app:destination="@id/profilFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hesapDetayFragment"
+        android:name="com.rjhtctn.hacostagram.view.HesapDetayFragment"
+        android:label="fragment_hesap_detay"
+        tools:layout="@layout/fragment_hesap_detay" />
 </navigation>
