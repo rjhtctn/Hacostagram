@@ -18,11 +18,6 @@ class SifreDegistirFragment : Fragment() {
     private var _binding: FragmentSifreDegistirBinding? = null
     private val binding get()  = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -91,7 +86,7 @@ class SifreDegistirFragment : Fragment() {
                 if (isHidden) null else PasswordTransformationMethod.getInstance()
             field.setSelection(field.text.length)
         }
-        sifreDegistirVisibility1.setImageResource(
+        sifreDegistirVisibility2.setImageResource(
             if (isHidden) R.drawable.ic_visibility
             else R.drawable.ic_visibility_off
         )

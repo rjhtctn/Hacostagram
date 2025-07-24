@@ -12,10 +12,14 @@ import com.rjhtctn.hacostagram.BuildConfig
 import com.cloudinary.android.MediaManager
 import com.rjhtctn.hacostagram.R
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            installSplashScreen()
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)

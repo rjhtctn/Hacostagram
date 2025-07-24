@@ -142,7 +142,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:text="Kayıt Ekranı"
+        android:text="HACOSTAGRAM KAYIT"
         android:textColor="?attr/colorOnSurface"
         android:textAlignment="center"
         android:textSize="30sp"

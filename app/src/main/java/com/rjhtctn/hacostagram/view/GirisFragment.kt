@@ -46,7 +46,7 @@ class GirisFragment : Fragment() {
                 return
             }
         }
-        binding.girisVisibility.setOnClickListener { sifreGoster(it) }
+        binding.girisVisibility.setOnClickListener { sifreGoster() }
         binding.girisButton.setOnClickListener { girisYap(it) }
         binding.giristenKayitaButon.setOnClickListener { gecisYap(it) }
         requireActivity().onBackPressedDispatcher
@@ -57,7 +57,7 @@ class GirisFragment : Fragment() {
             })
     }
 
-    private fun sifreGoster(view: View) = with(binding) {
+    private fun sifreGoster() = with(binding) {
         val isHidden = passwordEditText.transformationMethod is PasswordTransformationMethod
         listOf(passwordEditText).forEach { field ->
             field.transformationMethod =

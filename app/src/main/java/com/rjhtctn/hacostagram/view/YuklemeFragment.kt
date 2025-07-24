@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.rjhtctn.hacostagram.BuildConfig
 import android.view.ViewGroup
+import com.rjhtctn.hacostagram.util.FeedEventsBus
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -204,6 +205,7 @@ class YuklemeFragment : Fragment() {
                 postsRef.set(post)
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "Paylaşıldı!", Toast.LENGTH_SHORT).show()
+                        FeedEventsBus.publish(FeedEventsBus.Event.NewPost(newId))
                         findNavController().navigateUp()
                     }.addOnFailureListener { e ->
                         toast("Firestore hata: ${e.localizedMessage}")

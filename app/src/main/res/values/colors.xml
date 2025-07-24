@@ -8,4 +8,7 @@
     <color name="colorOnPrimary">@color/button_text</color>
     <color name="colorSurface">#FFFFFF</color>
     <color name="colorOnSurface">@color/text</color>
+    <color name="colorPrimaryContainer">@color/colorPrimary</color>
+    <color name="colorOnPrimaryContainer">@color/colorOnPrimary</color>
+    <color name="brand_black">#000000</color>
 </resources>

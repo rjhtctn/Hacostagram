@@ -3,6 +3,8 @@ package com.rjhtctn.hacostagram.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.RecyclerRowFeedBinding
@@ -11,37 +13,69 @@ import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PostAdapter(private val postList : ArrayList<Posts>) : RecyclerView.Adapter<PostAdapter.PostHolder>() {
-    class PostHolder(val binding : RecyclerRowFeedBinding) : RecyclerView.ViewHolder(binding.root)
+class PostAdapter :
+    ListAdapter<Posts, PostAdapter.PostHolder>(DIFF) {
+
+    companion object {
+        const val PAYLOAD_PP_SILINDI = "PAYLOAD_PP_SILINDI"
+        private val DIFF = object : DiffUtil.ItemCallback<Posts>() {
+            override fun areItemsTheSame(old: Posts, new: Posts) =
+                old.imageUrl == new.imageUrl && old.time == new.time
+
+            override fun areContentsTheSame(old: Posts, new: Posts) = old == new
+        }
+    }
+
+    inner class PostHolder(val binding: RecyclerRowFeedBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
-        val binding = RecyclerRowFeedBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return PostHolder(binding)
+        val b = RecyclerRowFeedBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent, false
+        )
+        return PostHolder(b)
     }
 
-    override fun getItemCount(): Int {
-        return postList.size
-    }
-
-    override fun onBindViewHolder(holder: PostHolder, position: Int) = with(holder.binding){
-        val post = postList[position]
-        post.profilePhotoUrl
-            .takeIf { !it.isNullOrBlank() }
-            ?.let { url ->
-                Picasso.get()
-                    .load(url)
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
-                    .into(profilResmi)
-            } ?: profilResmi.setImageResource(R.drawable.ic_profile)
-        feedKullaniciAdi.text = post.kullaniciAdi
-        recyclerCommentText.text = post.comment
-        Picasso.get().load(post.imageUrl).into(recyclerImageView)
-        feedPostTarih.text = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(post.time)
-        if (position == 0) {
-            border.visibility = View.GONE
+    override fun onBindViewHolder(
+        holder: PostHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
         } else {
-            border.visibility = View.VISIBLE
+            payloads.forEach { payload ->
+                if (payload == PAYLOAD_PP_SILINDI) {
+                    holder.binding.profilResmi
+                        .setImageResource(R.drawable.ic_profile)
+                }
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: PostHolder, position: Int) {
+        val post = getItem(position)
+        with(holder.binding) {
+            post.profilePhotoUrl
+                ?.takeIf { it.isNotBlank() }
+                ?.let { url ->
+                    Picasso.get()
+                        .load(url)
+                        .noFade()
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.ic_profile)
+                        .into(profilResmi)
+                } ?: profilResmi.setImageResource(R.drawable.ic_profile)
+
+            feedKullaniciAdi.text   = post.kullaniciAdi
+            recyclerCommentText.text = post.comment
+            Picasso.get().load(post.imageUrl).noFade().into(recyclerImageView)
+            feedPostTarih.text =
+                SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+                    .format(post.time)
+            border.visibility = if (position == 0) View.GONE else View.VISIBLE
         }
     }
 }
+

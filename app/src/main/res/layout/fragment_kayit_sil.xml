@@ -14,7 +14,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/button_background"
-        android:text="Kayıt Sil"
+        android:text="HESAP SİL"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="20sp"
         tools:ignore="DuplicateSpeakableTextCheck"
@@ -91,7 +91,7 @@
         android:layout_width="0dp"
         android:textAlignment="center"
         android:layout_height="wrap_content"
-        android:text="Kayıt Silme Ekranı"
+        android:text="HESAP SİL"
         app:layout_constraintHorizontal_bias="0.0"
         android:textStyle="bold"
         android:textSize="30sp"
@@ -99,8 +99,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backButon"
-        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp">
 
     </TextView>

@@ -21,16 +21,14 @@
         android:theme="@style/Theme.Hacostagram">
         <activity
             android:name=".view.MainActivity"
+            android:theme="@style/Theme.Hacostagram.Launch"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity
-            android:name="com.canhub.cropper.CropImageActivity"
-            android:exported="false" />
     </application>
+
 
 </manifest>
