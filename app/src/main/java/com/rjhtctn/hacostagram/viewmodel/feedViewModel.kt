@@ -24,7 +24,7 @@ class feedViewModel : ViewModel() {
             is FeedEventsBus.Event.CommentUpdated -> refreshSingle(e.postId)
             is FeedEventsBus.Event.PostDeleted   -> removeLocal(e.postId)
             is FeedEventsBus.Event.ProfilePhotoChanged -> {
-                photoCache[e.username] = e.newUrl   // "" olabilir
+                photoCache[e.username] = e.newUrl
                 items.indices.forEach { i ->
                     if (items[i].kullaniciAdi == e.username) {
                         items[i] = items[i].copy(profilePhotoUrl = e.newUrl)

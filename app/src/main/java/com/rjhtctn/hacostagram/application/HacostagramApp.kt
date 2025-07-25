@@ -3,6 +3,7 @@ package com.rjhtctn.hacostagram.application
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -39,6 +40,7 @@ class HacostagramApp : Application() {
                 android.os.Handler(mainLooper).post {
                     val act = currentActivity ?: return@post
                     val nav = act.findNavController(R.id.fragmentContainerView)
+                    Toast.makeText(act, "Şifreniz değişti, tekrar giriş yapmanız gerekiyor.", Toast.LENGTH_LONG).show()
                     if (nav.currentDestination?.id != R.id.girisFragment) {
                         nav.navigate(
                             R.id.action_global_girisFragment,

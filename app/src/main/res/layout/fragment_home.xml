@@ -31,7 +31,9 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/homeBottomNav"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        app:itemIconSize="30dp"
+        app:itemIconTint="@null"
         style="@style/BottomNav.Clean"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/menu_bottom_nav"

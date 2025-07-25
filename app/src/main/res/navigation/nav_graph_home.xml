@@ -14,7 +14,15 @@
         android:id="@+id/feedFragment"
         android:name="com.rjhtctn.hacostagram.view.FeedFragment"
         android:label="Ana Sayfa"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed" >
+        <action
+            android:id="@+id/action_feedFragment_to_profilFragment"
+            app:destination="@id/profilFragment" />
+        <argument
+            android:name="targetUsername"
+            app:nullable="true">
+        </argument>
+    </fragment>
     <fragment
         android:id="@+id/profilFragment"
         android:name="com.rjhtctn.hacostagram.view.ProfilFragment"
@@ -29,6 +37,7 @@
         <action
             android:id="@+id/action_profilFragment_to_hesapDetayFragment"
             app:destination="@id/hesapDetayFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/kayitSilFragment"

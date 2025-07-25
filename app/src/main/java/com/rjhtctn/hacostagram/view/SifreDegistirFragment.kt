@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.rjhtctn.hacostagram.R
 import com.google.firebase.auth.EmailAuthProvider
@@ -80,8 +81,8 @@ class SifreDegistirFragment : Fragment() {
     }
 
     private fun sifreGoster2() = with(binding) {
-        val isHidden = sifreDegistirMevcutSifre.transformationMethod is PasswordTransformationMethod
-        listOf(sifreDegistirMevcutSifre).forEach { field ->
+        val isHidden = sifreDegistirYeniSifre1.transformationMethod is PasswordTransformationMethod
+        listOf(sifreDegistirYeniSifre1, sifreDegistirYeniSifre2).forEach { field ->
             field.transformationMethod =
                 if (isHidden) null else PasswordTransformationMethod.getInstance()
             field.setSelection(field.text.length)
@@ -104,6 +105,37 @@ class SifreDegistirFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        user?.reload()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (auth.currentUser == null) {
+                    Toast.makeText(requireContext(), "Şifreniz değişti, tekrar giriş yapmalısınız.", Toast.LENGTH_LONG).show()
+                    requireActivity()
+                        .findNavController(R.id.fragmentContainerView)
+                        .navigate(
+                            R.id.action_global_girisFragment,
+                            null,
+                            NavOptions.Builder()
+                                .setPopUpTo(R.id.nav_graph, true)
+                                .build()
+                        )                }
+            } else {
+                Toast.makeText(requireContext(), "Oturum geçersiz, tekrar giriş yapın.", Toast.LENGTH_LONG).show()
+                requireActivity()
+                    .findNavController(R.id.fragmentContainerView)
+                    .navigate(
+                        R.id.action_global_girisFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )            }
+        }
     }
 
 }

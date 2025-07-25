@@ -17,6 +17,8 @@ import java.util.Locale
 class ProfilPostAdapter :
     ListAdapter<Posts, ProfilPostAdapter.PostHolder>(DIFF) {
 
+    var menuEnabled: Boolean = true
+
     companion object {
         private val DIFF = object : DiffUtil.ItemCallback<Posts>() {
             override fun areItemsTheSame(o: Posts, n: Posts) = o.id == n.id
@@ -50,6 +52,10 @@ class ProfilPostAdapter :
                 "dd MMM yyyy HH:mm", Locale.getDefault()).format(post.time)
 
             border.visibility = if (position == 0) View.GONE else View.VISIBLE
+
+            imageButton.visibility = if (menuEnabled) View.VISIBLE else View.INVISIBLE
+            imageButton.isEnabled = menuEnabled
+            imageButton.isClickable = menuEnabled
 
             imageButton.setOnClickListener { v ->
                 PopupMenu(holder.itemView.context, v).apply {

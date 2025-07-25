@@ -4,11 +4,14 @@
     <item
         android:id="@+id/feedFragment"
         android:title="@null"
-        android:icon="@drawable/ic_home"/>
+        android:icon="@drawable/ic_home"
+        app:iconTint="@null"/>
     <item
         android:id="@+id/yuklemeFragment"
-        android:icon="@drawable/ic_add_post"
-        android:title="@null"/>
+        android:icon="@drawable/ic_addpost"
+        android:title="@null"
+        app:iconTint="@null"
+        />
     <item
         android:id="@+id/profilFragment"
         android:icon="@drawable/ic_profile"

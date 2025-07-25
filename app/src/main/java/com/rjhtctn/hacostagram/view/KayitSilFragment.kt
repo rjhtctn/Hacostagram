@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.FragmentKayitSilBinding
 import com.rjhtctn.hacostagram.util.FeedEventsBus
 import kotlinx.coroutines.*
@@ -102,6 +105,15 @@ class KayitSilFragment : Fragment() {
                 toast("Hesap ve tüm veriler silindi!")
 
                 auth.signOut()
+                requireActivity()
+                    .findNavController(R.id.fragmentContainerView)
+                    .navigate(
+                        R.id.action_global_girisFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )
 
             } catch (e: Exception) {
                 toast("Silme hatası: ${e.localizedMessage}")
@@ -122,5 +134,37 @@ class KayitSilFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView(); _b = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        user?.reload()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (auth.currentUser == null) {
+                    Toast.makeText(requireContext(), "Şifreniz değişti, tekrar giriş yapmalısınız.", Toast.LENGTH_LONG).show()
+                    requireActivity()
+                        .findNavController(R.id.fragmentContainerView)
+                        .navigate(
+                            R.id.action_global_girisFragment,
+                            null,
+                            NavOptions.Builder()
+                                .setPopUpTo(R.id.nav_graph, true)
+                                .build()
+                        )                }
+            } else {
+                Toast.makeText(requireContext(), "Oturum geçersiz, tekrar giriş yapın.", Toast.LENGTH_LONG).show()
+                requireActivity()
+                    .findNavController(R.id.fragmentContainerView)
+                    .navigate(
+                        R.id.action_global_girisFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )
+            }
+        }
     }
 }

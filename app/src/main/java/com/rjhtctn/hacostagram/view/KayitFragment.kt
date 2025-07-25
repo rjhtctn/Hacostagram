@@ -62,6 +62,10 @@ class KayitFragment : Fragment() {
             view.findNavController()
                 .navigate(KayitFragmentDirections.actionKayitFragmentToGirisFragment())
         }
+        binding.backButon2.setOnClickListener {
+            view.findNavController()
+                .navigate(KayitFragmentDirections.actionKayitFragmentToGirisFragment())
+        }
 
         kayitEmail.doAfterTextChanged { text ->
             if (text != null && !Patterns.EMAIL_ADDRESS.matcher(text).matches()) {

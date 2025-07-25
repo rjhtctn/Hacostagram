@@ -5,9 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.adapter.PostAdapter
 import com.rjhtctn.hacostagram.databinding.FragmentFeedBinding
 import com.rjhtctn.hacostagram.util.FeedEventsBus
@@ -55,10 +62,45 @@ class FeedFragment : Fragment() {
                 }
             }
         }
+
+        adapter.onUserClickListener = { username ->
+            findNavController().navigate(R.id.profilFragment, bundleOf("targetUsername" to username))
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _b = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        user?.reload()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (auth.currentUser == null) {
+                    Toast.makeText(requireContext(), "Şifreniz değişti, tekrar giriş yapmalısınız.", Toast.LENGTH_LONG).show()
+                    requireActivity()
+                        .findNavController(R.id.fragmentContainerView)
+                        .navigate(
+                            R.id.action_global_girisFragment,
+                            null,
+                            NavOptions.Builder()
+                                .setPopUpTo(R.id.nav_graph, true)
+                                .build()
+                        )                }
+            } else {
+                Toast.makeText(requireContext(), "Oturum geçersiz, tekrar giriş yapın.", Toast.LENGTH_LONG).show()
+                requireActivity()
+                    .findNavController(R.id.fragmentContainerView)
+                    .navigate(
+                        R.id.action_global_girisFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )            }
+        }
     }
 }

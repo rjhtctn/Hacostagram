@@ -16,6 +16,12 @@ class ProfilViewModel : ViewModel() {
         val photoUrl: String = ""
     )
 
+    fun initByUsername(username: String) {
+        if (username.isBlank() || cachedUsername == username) return
+        cachedUsername = username
+        startListeners()
+    }
+
     val userLive  = MutableLiveData<UserPublic>()
     val postsLive = MutableLiveData<List<Posts>>()
 
@@ -39,29 +45,6 @@ class ProfilViewModel : ViewModel() {
     }
 
     init { FeedEventsBus.live.observeForever(busObserver) }
-
-    fun init(uid: String?) {
-        if (uid.isNullOrBlank() || cachedUsername != null) return
-
-        db.collection("usersPrivate").document(uid)
-            .get(Source.CACHE)
-            .addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    cachedUsername = doc.getString("kullaniciAdi").orEmpty()
-                    startListeners()
-                } else fetchUsernameFromServer(uid)
-            }
-            .addOnFailureListener { fetchUsernameFromServer(uid) }
-    }
-
-    private fun fetchUsernameFromServer(uid: String) {
-        db.collection("usersPrivate").document(uid).get()
-            .addOnSuccessListener {
-                cachedUsername = it.getString("kullaniciAdi").orEmpty()
-                if (!cachedUsername.isNullOrBlank()) startListeners()
-            }
-    }
-
     private fun startListeners() { startUserListener(); startPostsListener() }
 
     private fun startUserListener() {

@@ -19,6 +19,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.FragmentYuklemeBinding
 class YuklemeFragment : Fragment() {
     private var _binding: FragmentYuklemeBinding? = null
@@ -228,5 +231,36 @@ class YuklemeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView(); _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        user?.reload()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (auth.currentUser == null) {
+                    Toast.makeText(requireContext(), "Şifreniz değişti, tekrar giriş yapmalısınız.", Toast.LENGTH_LONG).show()
+                    requireActivity()
+                        .findNavController(R.id.fragmentContainerView)
+                        .navigate(
+                            R.id.action_global_girisFragment,
+                            null,
+                            NavOptions.Builder()
+                                .setPopUpTo(R.id.nav_graph, true)
+                                .build()
+                        )                }
+            } else {
+                Toast.makeText(requireContext(), "Oturum geçersiz, tekrar giriş yapın.", Toast.LENGTH_LONG).show()
+                requireActivity()
+                    .findNavController(R.id.fragmentContainerView)
+                    .navigate(
+                        R.id.action_global_girisFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )            }
+        }
     }
 }

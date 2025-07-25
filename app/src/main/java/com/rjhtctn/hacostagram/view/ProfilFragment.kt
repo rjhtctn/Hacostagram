@@ -49,15 +49,14 @@ class ProfilFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
     private val db   = Firebase.firestore
 
-    private val adapter = ProfilPostAdapter()
-
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var photoPicker: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var safPicker:   ActivityResultLauncher<Array<String>>
     private var secilenGorsel: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState); registerLaunchers()
+        super.onCreate(savedInstanceState)
+        registerLaunchers()
     }
 
     override fun onCreateView(
@@ -72,7 +71,6 @@ class ProfilFragment : Fragment() {
         super.onViewCreated(v, s)
 
         b.profilMenuButon.setOnClickListener { b.drawerLayout.openDrawer(GravityCompat.END) }
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -81,29 +79,18 @@ class ProfilFragment : Fragment() {
                     else { isEnabled = false; requireActivity().onBackPressed() }
                 }
             })
-
         b.navigationView.setNavigationItemSelectedListener { item ->
             b.drawerLayout.closeDrawer(GravityCompat.END)
             when (item.itemId) {
-
                 R.id.menu_detay ->
-                    runCatching {
-                        findNavController()
-                            .navigate(R.id.action_profilFragment_to_hesapDetayFragment)
-                    }.onFailure { toast("Navigasyon hatası: ${it.message}") }
-
+                    runCatching { findNavController().navigate(R.id.action_profilFragment_to_hesapDetayFragment) }
+                        .onFailure { toast("Navigasyon hatası: ${it.message}") }
                 R.id.menu_sifre_degistir ->
-                    runCatching {
-                        findNavController()
-                            .navigate(R.id.action_profilFragment_to_sifreDegistirFragment)
-                    }.onFailure { toast("Navigasyon hatası: ${it.message}") }
-
+                    runCatching { findNavController().navigate(R.id.action_profilFragment_to_sifreDegistirFragment) }
+                        .onFailure { toast("Navigasyon hatası: ${it.message}") }
                 R.id.menu_hesap_sil ->
-                    runCatching {
-                        findNavController()
-                            .navigate(R.id.action_profilFragment_to_kayitSilFragment)
-                    }.onFailure { toast("Navigasyon hatası: ${it.message}") }
-
+                    runCatching { findNavController().navigate(R.id.action_profilFragment_to_kayitSilFragment) }
+                        .onFailure { toast("Navigasyon hatası: ${it.message}") }
                 R.id.menu_cikis -> {
                     auth.signOut()
                     requireActivity()
@@ -121,48 +108,81 @@ class ProfilFragment : Fragment() {
         }
 
         b.recyclerViewPosts.layoutManager = LinearLayoutManager(requireContext())
-        b.recyclerViewPosts.adapter = adapter
-        adapter.onEditClickListener   = ::guncelleYorum
-        adapter.onDeleteClickListener = { post, _ -> silPost(post) }
+        b.recyclerViewPosts.adapter = ProfilPostAdapter().also {
+            it.onEditClickListener   = ::guncelleYorum
+            it.onDeleteClickListener = { post, _ -> silPost(post) }
+        }
 
-        vm.postsLive.observe(viewLifecycleOwner) { list ->
-            adapter.submitList(list) {
-                adapter.notifyDataSetChanged()
+        val targetUsername = arguments?.getString("targetUsername")
+        val uid = auth.currentUser?.uid
+        if (uid.isNullOrBlank()) {
+            requireActivity()
+                .findNavController(R.id.fragmentContainerView)
+                .navigate(
+                    R.id.action_global_girisFragment, null,
+                    NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build()
+                )
+            return
+        }
+
+        db.collection("usersPrivate").document(uid).get()
+            .addOnSuccessListener { doc ->
+                val myUsername = doc.getString("kullaniciAdi").orEmpty()
+                val isMe = targetUsername.isNullOrBlank() || targetUsername == myUsername
+                val shownUsername = targetUsername ?: myUsername
+
+                vm.initByUsername(shownUsername)
+                setupUI(isMe)
+
+                vm.userLive.observe(viewLifecycleOwner) { uiGuncelle(it) }
+                vm.postsLive.observe(viewLifecycleOwner) { list ->
+                    (b.recyclerViewPosts.adapter as ProfilPostAdapter).apply {
+                        menuEnabled = isMe
+                        submitList(list) { notifyDataSetChanged() }
+                    }
+                }
+            }
+            .addOnFailureListener {
+                toast("Kullanıcı adı alınamadı.")
+            }
+    }
+
+    private fun setupUI(isMe: Boolean) {
+        b.profilMenuButon.visibility = if (isMe) View.VISIBLE else View.GONE
+        b.profilResmi.isClickable    = isMe
+        b.profilResmi.setOnClickListener(null)
+        if (isMe) {
+            b.profilResmi.setOnClickListener {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("İşlem Seçin")
+                    .setPositiveButton("Güncelle") { _, _ -> gorselSec() }
+                    .setNegativeButton("Sil") { _, _ ->
+                        val user = vm.cachedUsername.orEmpty()
+                        db.collection("usersPublic").document(user)
+                            .update("profilePhoto", "")
+                            .addOnSuccessListener {
+                                toast("Profil fotoğrafı silindi.")
+                                FeedEventsBus.publish(
+                                    FeedEventsBus.Event.ProfilePhotoChanged(user, "")
+                                )
+                            }
+                    }
+                    .setNeutralButton("İptal", null)
+                    .show()
             }
         }
-        vm.userLive.observe(viewLifecycleOwner)  { uiGuncelle(it) }
-
-        vm.init(auth.currentUser?.uid)
-
-        b.profilResmi.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("İşlem Seçin")
-                .setPositiveButton("Güncelle") { _, _ -> gorselSec() }
-                .setNegativeButton("Sil") { _, _ ->
-                    val kullanici = b.profilKullaniciAdi.text.toString()
-                    db.collection("usersPublic").document(kullanici)
-                        .update("profilePhoto", "")
-                        .addOnSuccessListener {
-                            toast("Profil fotoğrafı silindi.")
-                            FeedEventsBus.publish(
-                                FeedEventsBus.Event.ProfilePhotoChanged(kullanici, "")
-                            )
-                        }
-                }
-                .setNeutralButton("İptal", null)
-                .show()
-        }
     }
+
     private fun uiGuncelle(u: ProfilViewModel.UserPublic) {
         b.profilKullaniciAdi.text = vm.cachedUsername
         b.profilIsimSoyisim.text  = "${u.isim} ${u.soyisim}".trim()
         if (u.photoUrl.isNotBlank())
             Picasso.get().load(u.photoUrl)
                 .noFade()
-                .placeholder(R.drawable.ic_profile)
-                .error(R.drawable.ic_profile)
+                .placeholder(R.drawable.ic_profile_org)
+                .error(R.drawable.ic_profile_org)
                 .into(b.profilResmi)
-        else b.profilResmi.setImageResource(R.drawable.ic_profile)
+        else b.profilResmi.setImageResource(R.drawable.ic_profile_org)
     }
 
     private fun guncelleYorum(post: Posts, pos: Int) {
@@ -181,7 +201,8 @@ class ProfilFragment : Fragment() {
                     }
                     .addOnFailureListener { toast(it.message ?: "Hata") }
             }
-            .setNegativeButton("İptal", null).show()
+            .setNegativeButton("İptal", null)
+            .show()
     }
 
     private fun silPost(post: Posts) {
@@ -198,7 +219,8 @@ class ProfilFragment : Fragment() {
                     }
                     .addOnFailureListener { toast(it.message ?: "Hata") }
             }
-            .setNegativeButton("İptal", null).show()
+            .setNegativeButton("İptal", null)
+            .show()
     }
 
     private fun gorselSec() {
@@ -218,9 +240,7 @@ class ProfilFragment : Fragment() {
 
     private fun openSelector() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            photoPicker.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
+            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         else safPicker.launch(arrayOf("image/*"))
     }
 
@@ -242,13 +262,13 @@ class ProfilFragment : Fragment() {
                 override fun onProgress(reqId: String?, total: Long, sent: Long) {}
                 override fun onSuccess(reqId: String?, data: MutableMap<Any?, Any?>?) {
                     val secure = data?.get("secure_url") as? String ?: return
-                    db.collection("usersPublic")
-                        .document(vm.cachedUsername!!)
+                    val user = vm.cachedUsername.orEmpty()
+                    db.collection("usersPublic").document(user)
                         .update("profilePhoto", secure)
                         .addOnSuccessListener {
                             toast("Profil fotoğrafı yüklendi!")
                             FeedEventsBus.publish(
-                                FeedEventsBus.Event.ProfilePhotoChanged(vm.cachedUsername!!, secure)
+                                FeedEventsBus.Event.ProfilePhotoChanged(user, secure)
                             )
                         }
                 }
@@ -277,6 +297,40 @@ class ProfilFragment : Fragment() {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
 
     override fun onDestroyView() {
-        super.onDestroyView(); _b = null
+        super.onDestroyView()
+        _b = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        auth.currentUser?.reload()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (auth.currentUser == null) {
+                    Toast.makeText(requireContext(),
+                        "Şifreniz değişti, tekrar giriş yapmalısınız.",
+                        Toast.LENGTH_LONG).show()
+                    requireActivity().findNavController(R.id.fragmentContainerView)
+                        .navigate(
+                            R.id.action_global_girisFragment,
+                            null,
+                            NavOptions.Builder()
+                                .setPopUpTo(R.id.nav_graph, true)
+                                .build()
+                        )
+                }
+            } else {
+                Toast.makeText(requireContext(),
+                    "Oturum geçersiz, tekrar giriş yapın.",
+                    Toast.LENGTH_LONG).show()
+                requireActivity().findNavController(R.id.fragmentContainerView)
+                    .navigate(
+                        R.id.action_global_girisFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )
+            }
+        }
     }
 }
