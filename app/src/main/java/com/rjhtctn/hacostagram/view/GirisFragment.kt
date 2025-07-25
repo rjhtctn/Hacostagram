@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -55,6 +56,9 @@ class GirisFragment : Fragment() {
                     requireActivity().moveTaskToBack(true)
                 }
             })
+        binding.giristenSifirlamaButon.setOnClickListener {
+            findNavController().navigate(GirisFragmentDirections.actionGirisFragmentToSifreSifirlamaFragment())
+        }
     }
 
     private fun sifreGoster() = with(binding) {
