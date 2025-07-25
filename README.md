@@ -1,90 +1,93 @@
 # Hacostagram
 
-Kotlin + Jetpack Navigation ile geliştirilen, Firebase ve **Cloudinary (unsigned upload)** destekli fotoğraf paylaşım uygulaması  
-“Instagram mantığını” sade fakat **ölçeklenebilir** bir mimaride örneklemeyi amaçlar.
+Bu proje, Android üzerinde ölçeklenebilir ve modüler bir mimari kullanarak “Instagram mantığını” basit ama güçlü bir şekilde hayata geçiriyor. Yeni başlayanlardan ileri düzey geliştiricilere kadar herkesin üzerine inşa edebileceği bir temel sunuyor.
 
 ---
 
-## 🚀 Özellikler
-
-| Kategori | Özellikler                                                                                             |
-| -------- |--------------------------------------------------------------------------------------------------------|
-| **Kayıt** | Ad‑Soyad, Kullanıcı Adı, E‑posta, Şifre                                                                |
-| **Giriş** | Kullanıcı Adı / E-Posta + Şifre                                                                        |
-| **Şifre Sıfırlama** | Kullanıcı Adı + E‑posta                                                                                |
-| **Şifre Değiştirme** | Mevcut Şifre + Yeni Şifre                                                                              |
-| **Gönderi** | Görsel seç + Yorum Ekle & yükle <br> Gerçek‑zamanlı akış (Firestore) <br> Gönderi menüsü – Sil / Düzenle |
-| **Profil** | Kullanıcı gönderilerini listeleme & Bilgiler <br> Hesap silme (Firebase + Cloudinary)                  |
-| **Arayüz** | Bottom Navigation → Feed / Home / Profile <br> Drawer Menu <br> Material 3 tema                        |
-| **Medya** | Cloudinary “unsigned upload” <br> Picasso ile yerel önbellek                                           |
+## 🚀 Genel Bakış
+- **Teknolojiler:** Kotlin, Jetpack Navigation, ViewModel & LiveData (MVVM), Firebase Auth & Firestore (offline persistence), Cloudinary (unsigned upload), Picasso (image loading), Material Components.
+- **Mimari:**
+   - MVVM ile katmanlı yapı
+   - Navigation Component ile tutarlı gezinti
+   - Uygulama yaşam döngüsü takibi için `Application` sınıfı
 
 ---
 
-## 🗂 Ekran / Fragment Haritası
+## ✨ Öne Çıkan Özellikler
 
-| Fragment | Amaç                                                  |
-| -------- |-------------------------------------------------------|
-| `GirisFragment` | **Kullanıcı Adı/E-Posta + Şifre** ile giriş           |
-| `KayitFragment` | Ad‑Soyad, Kullanıcı Adı, E‑posta, Şifre ile kayıt     |
-| `SifreSifirlamaFragment` | Kullanıcı Adı & E‑posta ile sıfırlama isteği          |
-| `SifreDegistirFragment` | Mevcut Şifre + Yeni Şifre doğrulama                   |
-| `FeedFragment` | Tüm gönderileri listeler                              |
-| `YuklemeFragment` | Yeni fotoğraf yükleme + Yorum ekleme                  |
-| `ProfilFragment` | Kullanıcının profil duvarı + Kullanıcının gönderileri |
-| `KayitSilFragment` | Kullanıcı adı + E-Posta + Şifre + Hesap kapatma onayı |
-| `HomeFragment` | Alt gezinmenin kök noktası                            |
+### 1. Kayıt ve Kimlik Doğrulama
+- **Kayıt:** Ad‑Soyad, Kullanıcı Adı, E‑posta, Şifre
+- **E‑posta Doğrulama:** Kayıt sonrası doğrulama maili gönderilir
+- **Giriş:** E‑posta veya kullanıcı adı ile giriş
+- **Şifre Sıfırlama:** Kullanıcı adı + e‑posta kontrolü sonrası reset maili
 
-Tam yönlendirme yapısı iki ayrı Navigation Graph’te (`nav_graph.xml`, `home_nav_graph.xml`) tanımlıdır.
+### 2. Güvenlik ve Hesap Yönetimi
+- **Şifre Değiştirme:** Eski şifre kontrolü, yeni şifre eşleşmesi
+- **Hesap Silme:** Tüm gönderiler, profiller ve Firestore verisiyle kalıcı silme
+- **Oturum Dinleme:** Şifre değişikliğinde veya oturum geçersizleştiğinde anında yönlendirme
+
+### 3. Gönderi (Post) Yönetimi
+- **Yükleme:**
+   - JPEG doğrulaması (header check)
+   - Cloudinary’a unsigned upload
+   - Otomatik “q_auto,f_auto” optimizasyon
+- **Yorum Ekleme:** 30 karakter/kelime limiti, geçersiz karakter filtresi
+- **Gerçek Zamanlı Güncellemeler:** `FeedEventsBus` ile yeni gönderi, yorum güncelleme, silme bildirimleri
+
+### 4. Besleme (Feed) Ekranı
+- **Listeleme:** `RecyclerView + DiffUtil + ListAdapter`
+- **Profil Fotoğrafı Yenileme:** Payload tabanlı, sadece değişen öğeyi güncelleme
+- **Navigasyon:** Kullanıcı adına tıklayınca profil sayfasına yönlendirme
+
+### 5. Profil ve Hesap Detayları
+- **Profil Görünümü:**
+   - Gönderi listesi (düzenle / sil menüsü)
+   - Profil fotoğrafı yükleme, silme, güncelleme
+- **Hesap Detayları:** İsim, soyisim, kullanıcı adı, e‑posta, kayıt tarihi
+- **Dinamik Alt Menü:** DrawerLayout üzerinden detay, şifre değiştir, hesap sil, çıkış
+
+### 6. Alt Navigasyon (Bottom Nav)
+- **Dinamik İkonlar:**
+   - Feed, Yükleme, Profil
+   - Profil ikonu için özel `Drawable` + halka efekti
+- **Tutarlı Seçili Durum:** Back-stack ve yeniden seçim davranışları
 
 ---
 
-## 🔧 Kurulum
+## 🏗️ Proje Mimarisi & Paket Yapısı
 
-> Proje anahtarları **dahil değildir**. Aşağıdaki adımlar size ait yapılandırmayı içerir.
+- **application**  
+  Uygulama genel ayarları, Firestore persistence ve Auth listener
+- **model**  
+  Data sınıfları (`Posts`)
+- **util**  
+  Yardımcı sınıflar (`FeedEventsBus`)
+- **adapter**  
+  `RecyclerView` adaptörleri (`PostAdapter`, `ProfilPostAdapter`)
+- **view**  
+  Fragment’lar (Giriş, Kayıt, Feed, Profil, Upload vb.)
+- **viewmodel**  
+  MVVM ViewModel’lar (`ProfilViewModel`, `feedViewModel`)
+- **res**  
+  XML kaynakları (layout, menu, drawable, renkler)
 
-```bash
-git clone https://github.com/rjhtctn/hacostagram.git
-````
+---
 
-1. **Firebase Console** ► yeni proje ► Android uygulaması ekleyin
-   `google-services.json` dosyasını `app/` klasörüne koyun.
-2. Authentication’da **E‑posta/Şifre**; Firestore’da **test kuralları** (veya kendi kurallarınız) etkinleştirin.
-3. **Cloudinary** hesabı açın → **Unsigned Preset** oluşturun.
-   `local.properties` veya CI gizli değişkenlerinde:
+## ⚙️ Kurulum ve Çalıştırma
 
+1. **Depoyu Klonlayın**
+   ```bash
+   git clone https://github.com/rjhtctn/hacostagram.git
    ```
-   CLOUD_NAME=xxx
-   API_KEY=xxx
-   UNSIGNED_PRESET=unsigned_preset
-   ```
-4. Android Studio ► **Run** ▶️
+2. **Android Studio’da Açın**
+   - `app/` modülünü import edin
+   - Gerekli SDK ve iş yüklerini yükleyin
+3. **Firebase Ayarları**
+   - `google-services.json` dosyasını `app/` dizinine ekleyin
+   - Firestore offline persistence aktif
+4. **Cloudinary**
+   - `BuildConfig.CLOUD_PRESET` değerini preset’inizle güncelleyin
+5. **Çalıştırın**
+   - Bir Android cihaz veya emulator seçin
+   - Uygulamayı başlatın  
 
----
-
-## 🏗 Katmanlı Mimarî
-
-```
-app/
- ├── ui/ (Activity & Fragment’ler)
- ├── adapter/ PostAdapter.kt
- ├── model/  Posts.kt
- └── res/
-      ├── layout/ …xml
-      └── navigation/ …xml
-```
-
-Basit **Fragment + Repository** düzeni; ileri seviye için ViewModel‑Hilt’e geçirilebilir.
-
----
-
-## 📦 Önemli Bağımlılıklar
-
-| Grup          | Kütüphane                                                                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Firebase      | `com.google.firebase:firebase-bom`                                                                                                   |
-| Cloud Storage | `com.cloudinary:cloudinary-android`                                                                                                  |
-| UI            | `androidx.navigation:navigation-fragment-ktx` <br>`androidx.navigation:navigation-ui-ktx` <br>`com.google.android.material:material` |
-| Görsel        | `com.squareup.picasso:picasso`                                                                                                       |
-| Test          | `junit:junit`, `androidx.test.ext:junit`                                                                                             |
-
----
