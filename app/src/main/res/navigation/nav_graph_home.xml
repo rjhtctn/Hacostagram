@@ -52,5 +52,9 @@
         android:id="@+id/hesapDetayFragment"
         android:name="com.rjhtctn.hacostagram.view.HesapDetayFragment"
         android:label="fragment_hesap_detay"
-        tools:layout="@layout/fragment_hesap_detay" />
+        tools:layout="@layout/fragment_hesap_detay" >
+        <action
+            android:id="@+id/action_hesapDetayFragment_to_profilFragment"
+            app:destination="@id/profilFragment" />
+    </fragment>
 </navigation>

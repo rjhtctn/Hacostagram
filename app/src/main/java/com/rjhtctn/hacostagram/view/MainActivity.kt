@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val config = hashMapOf("cloud_name" to BuildConfig.CLOUD_NAME)
-            MediaManager.init(this, config)
+        MediaManager.init(this, config)
 
         val window = this.window
         val surface = ContextCompat.getColor(this, R.color.colorSurface)
