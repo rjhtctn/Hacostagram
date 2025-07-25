@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val window = this.window
         val surface = ContextCompat.getColor(this, R.color.colorSurface)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) { // API 35 adı
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             @Suppress("DEPRECATION")
             window.statusBarColor     = surface
             @Suppress("DEPRECATION")

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.HesapDetayFragment">
 
     <ImageButton
@@ -12,183 +12,195 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:background="@null"
         android:contentDescription="@null"
         android:padding="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_back"
-        app:layout_constraintBottom_toBottomOf="@id/detayBaslik"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnSurface"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"/>
 
     <TextView
         android:id="@+id/detayBaslik"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
         android:text="HESAP DETAYI"
-        android:textColor="?attr/colorOnSurface"
         android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
 
-    <EditText
+    <TextView
         android:id="@+id/detayIsim"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:enabled="false"
-        android:background="@null"
-        android:focusable="false"
-        android:cursorVisible="false"
-        android:autofillHints=""
-        android:textColor="?attr/colorOnSurface"
-        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
-        android:hint="İsminizi girin"
-        android:inputType="text"
         android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detayBaslik"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text1" />
 
-    <EditText
+    <TextView
         android:id="@+id/detaySoyisim"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:enabled="false"
-        android:background="@null"
-        android:focusable="false"
-        android:cursorVisible="false"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:autofillHints=""
-        android:textColor="?attr/colorOnSurface"
-        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
-        android:hint="Soyisminizi girin"
-        android:inputType="text"
         android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detayIsim"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text2" />
 
-    <EditText
+    <TextView
         android:id="@+id/detayKullaniciAdi"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:enabled="false"
-        android:background="@null"
-        android:focusable="false"
-        android:cursorVisible="false"
-        android:autofillHints=""
-        android:textColor="?attr/colorOnSurface"
-        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
-        android:hint="Kullanıcı adı girin"
-        android:inputType="text"
         android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detaySoyisim"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text3" />
 
-    <EditText
+    <TextView
         android:id="@+id/detayEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:enabled="false"
-        android:background="@null"
-        android:focusable="false"
-        android:cursorVisible="false"
-        android:autofillHints=""
-        android:textColor="?attr/colorOnSurface"
-        android:textColorHint="?attr/colorOnSurfaceVariant"
         android:ems="10"
-        android:hint="E-Posta adresinizi girin"
-        android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detayKullaniciAdi"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text4" />
 
     <TextView
         android:id="@+id/detayCreatedAt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
         android:textColor="?attr/colorOnSurface"
-        android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detayEmail"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text6" />
 
     <TextView
         android:id="@+id/detayPostSayisi"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:textColor="?attr/colorOnSurface"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detayCreatedAt"/>
-
-    <TextView
-        android:id="@+id/bilgileriGuncelle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:textColor="?attr/colorPrimary"
-        android:text="BİLGİLERİ GÜNCELLE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detayPostSayisi"/>
-
-    <Button
-        android:id="@+id/guncelleButton"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:textSize="20sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_background"
-        android:textColor="?attr/colorOnPrimary"
-        android:layout_marginTop="15dp"
-        android:text="GÜNCELLE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bilgileriGuncelle"/>
+        app:layout_constraintTop_toBottomOf="@id/text5" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detayBaslik"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:text="İSİM:"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="SOYİSİM:"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detayIsim" />
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="KULLANICI ADI:"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detaySoyisim" />
+
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="E-POSTA"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detayKullaniciAdi" />
+
+    <TextView
+        android:id="@+id/text5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="POST SAYISI:"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detayEmail" />
+
+    <TextView
+        android:id="@+id/text6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="HESAP AÇMA ZAMANI:"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detayPostSayisi" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

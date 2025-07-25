@@ -32,10 +32,7 @@ class SifreDegistirFragment : Fragment() {
         binding.sifreDegistirButon.setOnClickListener { sifreDegistir() }
         binding.sifreDegistirVisibility1.setOnClickListener { sifreGoster1() }
         binding.sifreDegistirVisibility2.setOnClickListener { sifreGoster2() }
-        binding.backButon.setOnClickListener {findNavController()
-            .navigate(R.id.action_sifreDegistirFragment_to_profilFragment,null,
-                NavOptions.Builder()
-                    .setPopUpTo(R.id.sifreDegistirFragment,true).build()) }
+        binding.backButon.setOnClickListener { findNavController().navigateUp() }
     }
 
     private fun sifreDegistir() {

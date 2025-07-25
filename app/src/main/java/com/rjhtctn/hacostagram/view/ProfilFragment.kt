@@ -40,6 +40,7 @@ import com.rjhtctn.hacostagram.util.FeedEventsBus
 import com.rjhtctn.hacostagram.viewmodel.ProfilViewModel
 import com.squareup.picasso.Picasso
 
+@Suppress("DEPRECATION")
 class ProfilFragment : Fragment() {
 
     private var _b: FragmentProfilBinding? = null
@@ -92,16 +93,19 @@ class ProfilFragment : Fragment() {
                     runCatching { findNavController().navigate(R.id.action_profilFragment_to_kayitSilFragment) }
                         .onFailure { toast("Navigasyon hatası: ${it.message}") }
                 R.id.menu_cikis -> {
-                    auth.signOut()
-                    requireActivity()
-                        .findNavController(R.id.fragmentContainerView)
-                        .navigate(
-                            R.id.action_global_girisFragment,
-                            null,
-                            NavOptions.Builder()
-                                .setPopUpTo(R.id.nav_graph, true)
-                                .build()
-                        )
+                    MaterialAlertDialogBuilder(requireContext()).setTitle("Çıkış yapmak istiyor musunuz?")
+                        .setPositiveButton("Evet") {_,_ ->
+                            auth.signOut()
+                            requireActivity()
+                                .findNavController(R.id.fragmentContainerView)
+                                .navigate(
+                                    R.id.action_global_girisFragment,
+                                    null,
+                                    NavOptions.Builder()
+                                        .setPopUpTo(R.id.nav_graph, true)
+                                        .build()
+                                )
+                    }.setNegativeButton("İptal", null).show()
                 }
             }
             true
@@ -157,15 +161,19 @@ class ProfilFragment : Fragment() {
                     .setTitle("İşlem Seçin")
                     .setPositiveButton("Güncelle") { _, _ -> gorselSec() }
                     .setNegativeButton("Sil") { _, _ ->
-                        val user = vm.cachedUsername.orEmpty()
-                        db.collection("usersPublic").document(user)
-                            .update("profilePhoto", "")
-                            .addOnSuccessListener {
-                                toast("Profil fotoğrafı silindi.")
-                                FeedEventsBus.publish(
-                                    FeedEventsBus.Event.ProfilePhotoChanged(user, "")
-                                )
-                            }
+                        MaterialAlertDialogBuilder(requireContext()).setTitle("Profil Fotoğrafı Silinecek")
+                            .setPositiveButton("Tamam") {_,_->
+                                val user = vm.cachedUsername.orEmpty()
+                                db.collection("usersPublic").document(user)
+                                    .update("profilePhoto", "")
+                                    .addOnSuccessListener {
+                                        toast("Profil fotoğrafı silindi.")
+                                        FeedEventsBus.publish(
+                                            FeedEventsBus.Event.ProfilePhotoChanged(user, "")
+                                        )
+                                    }
+                            }.setNegativeButton("İptal",null).show()
+
                     }
                     .setNeutralButton("İptal", null)
                     .show()
@@ -173,6 +181,7 @@ class ProfilFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun uiGuncelle(u: ProfilViewModel.UserPublic) {
         b.profilKullaniciAdi.text = vm.cachedUsername
         b.profilIsimSoyisim.text  = "${u.isim} ${u.soyisim}".trim()

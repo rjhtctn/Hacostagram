@@ -1,6 +1,7 @@
 package com.rjhtctn.hacostagram.view
 
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,8 +51,21 @@ class KayitSilFragment : Fragment() {
                 }
             }
         )
+        b.kayitSilVisibility.setOnClickListener { sifreGoster() }
     }
 
+    private fun sifreGoster(){
+        val isHidden = b.kayitSilSifre.transformationMethod is PasswordTransformationMethod
+        listOf(b.kayitSilSifre, b.kayitSilSifre2).forEach { field ->
+            field.transformationMethod =
+                if (isHidden) null else PasswordTransformationMethod.getInstance()
+            field.setSelection(field.text.length)
+        }
+        b.kayitSilVisibility.setImageResource(
+            if (isHidden) R.drawable.ic_visibility
+            else R.drawable.ic_visibility_off
+        )
+    }
     private fun confirmAndDelete() {
         val email = b.kayitSilEmail.text.toString().trim()
         val pass1 = b.kayitSilSifre.text.toString()

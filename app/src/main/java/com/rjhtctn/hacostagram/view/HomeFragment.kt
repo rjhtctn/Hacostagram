@@ -11,14 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.rjhtctn.hacostagram.util.CircleTransform
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.scale
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -27,9 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.rjhtctn.hacostagram.R
 import com.rjhtctn.hacostagram.databinding.FragmentHomeBinding
+import com.rjhtctn.hacostagram.util.CircleTransform
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import java.lang.Exception
 
 class HomeFragment : Fragment() {
     private lateinit var username: String
@@ -40,7 +38,6 @@ class HomeFragment : Fragment() {
     private var profileReg: ListenerRegistration? = null
     private var picassoTarget: Target? = null
     private var profileDrawableWithRing: ProfileDrawableWithRing? = null
-    private var destinationListener: NavController.OnDestinationChangedListener? = null
 
     private class NoTintDrawableWrapper(drawable: Drawable) : DrawableWrapper(drawable) {
         override fun setTintList(tint: ColorStateList?) {}
@@ -125,7 +122,6 @@ class HomeFragment : Fragment() {
 
         defaultTint = binding.homeBottomNav.itemIconTintList
         binding.homeBottomNav.itemIconTintList = null
-
         binding.homeBottomNav.setBackgroundColor(
             ContextCompat.getColor(requireContext(), R.color.colorOnPrimary)
         )
@@ -147,43 +143,31 @@ class HomeFragment : Fragment() {
                 }
             })
 
+        NavigationUI.setupWithNavController(binding.homeBottomNav, navController)
+
         binding.homeBottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.feedFragment -> {
-                    val cur      = navController.currentDestination?.id
-                    val args     = navController.currentBackStackEntry?.arguments
-                    val atOwn    = cur == R.id.profilFragment && args?.getString("targetUsername") == null
-                    val atUpload = cur == R.id.yuklemeFragment
-
-                    if (atOwn || atUpload) {
-                        navController.navigateUp()
-                    } else {
-                        navController.popBackStack(R.id.feedFragment, false)
-                    }
-                    NavigationUI.onNavDestinationSelected(item, navController)
+                    navController.popBackStack(R.id.feedFragment, false)
                     true
                 }
-                R.id.yuklemeFragment -> {
-                    NavigationUI.onNavDestinationSelected(item, navController)
-                    true
-                }
-                R.id.profilFragment -> {
-                    navController.popBackStack(R.id.profilFragment, true)
-                    navController.navigate(R.id.profilFragment)
-                    true
-                }
-                else -> false
+                else -> NavigationUI.onNavDestinationSelected(item, navController)
             }
         }
 
         binding.homeBottomNav.setOnItemReselectedListener { item ->
-            if (item.itemId == R.id.profilFragment) {
-                navController.popBackStack(R.id.profilFragment, true)
-                navController.navigate(R.id.profilFragment)
+            when (item.itemId) {
+                R.id.feedFragment -> navController.popBackStack(R.id.feedFragment, false)
+                R.id.profilFragment -> {
+                    navController.popBackStack(R.id.profilFragment, true)
+                    navController.navigate(R.id.profilFragment)
+                }
             }
         }
 
-        setupSelectionListener(navController)
+        navController.addOnDestinationChangedListener { _, dest, args ->
+            updateBottomNavIcons(dest, args)
+        }
     }
 
     private fun observeProfilePhoto() {
@@ -211,12 +195,7 @@ class HomeFragment : Fragment() {
                 val scaled = bmp.scale(px, px)
                 val drawable = NoTintDrawableWrapper(scaled.toDrawable(resources))
                 profileDrawableWithRing = ProfileDrawableWithRing(drawable, requireContext())
-                binding.homeBottomNav.menu.findItem(R.id.profilFragment).icon =
-                    profileDrawableWithRing
-                setupSelectionListener(
-                    (childFragmentManager.findFragmentById(binding.homeNavHost.id)
-                            as NavHostFragment).navController
-                )
+                binding.homeBottomNav.menu.findItem(R.id.profilFragment).icon = profileDrawableWithRing
             }
             override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) = resetBottomIcon()
             override fun onPrepareLoad(placeHolderDrawable: Drawable?){}
@@ -230,63 +209,55 @@ class HomeFragment : Fragment() {
 
     private fun resetBottomIcon() {
         profileDrawableWithRing = null
-        setupSelectionListener(
-            (childFragmentManager.findFragmentById(binding.homeNavHost.id)
-                    as NavHostFragment).navController
-        )
+        binding.homeBottomNav.menu.findItem(R.id.profilFragment)
+            .setIcon(R.drawable.ic_profile)
     }
 
-    private fun setupSelectionListener(navController: NavController) {
-        destinationListener?.let { navController.removeOnDestinationChangedListener(it) }
-        destinationListener = NavController.OnDestinationChangedListener { _, dest, args ->
-            val menu   = binding.homeBottomNav.menu
-            val target = args?.getString("targetUsername")
-            val isOther   = dest.id == R.id.profilFragment && !target.isNullOrBlank() && target != username
-            val isYukleme = dest.id == R.id.yuklemeFragment
-            val isOwnProf = dest.id == R.id.profilFragment && (target.isNullOrBlank() || target == username)
+    private fun updateBottomNavIcons(dest: NavDestination, args: Bundle?) {
+        val target = args?.getString("targetUsername")
+        val isOwnProfile = dest.id == R.id.profilFragment &&
+                (target.isNullOrBlank() || target == username)
+        val isUpload = dest.id == R.id.yuklemeFragment
 
-            val feedSelected = isOther || (!isYukleme && !isOwnProf)
-            menu.findItem(R.id.feedFragment).apply {
-                isChecked = feedSelected
-                icon = ContextCompat.getDrawable(
-                    requireContext(),
-                    if (feedSelected) R.drawable.ic_home_selected else R.drawable.ic_home
-                )
-            }
+        val isProfileRelatedPage = when (dest.id) {
+            R.id.hesapDetayFragment,
+            R.id.sifreDegistirFragment,
+            R.id.kayitSilFragment -> true
+            else -> false
+        }
 
-            menu.findItem(R.id.yuklemeFragment).apply {
-                isChecked = !isOther && isYukleme
-                icon = ContextCompat.getDrawable(
-                    requireContext(),
-                    if (!isOther && isYukleme) R.drawable.ic_addpost_selected else R.drawable.ic_addpost
-                )
-            }
+        val shouldSelectProfile = isOwnProfile || isProfileRelatedPage
+        val isFeedSelected = !shouldSelectProfile && !isUpload
 
-            menu.findItem(R.id.profilFragment).apply {
-                isChecked = !isOther && isOwnProf
-                icon = when {
-                    profileDrawableWithRing != null -> {
-                        profileDrawableWithRing!!.isSelected = (!isOther && isOwnProf)
-                        profileDrawableWithRing
-                    }
-                    !isOther && isOwnProf -> ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile_selected)
-                    else                  -> ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile)
+        binding.homeBottomNav.menu.findItem(R.id.feedFragment).apply {
+            isChecked = isFeedSelected
+            icon = ContextCompat.getDrawable(
+                requireContext(),
+                if (isFeedSelected) R.drawable.ic_home_selected else R.drawable.ic_home
+            )
+        }
+
+        binding.homeBottomNav.menu.findItem(R.id.yuklemeFragment).apply {
+            isChecked = isUpload
+            icon = ContextCompat.getDrawable(
+                requireContext(),
+                if (isUpload) R.drawable.ic_addpost_selected else R.drawable.ic_addpost
+            )
+        }
+
+        binding.homeBottomNav.menu.findItem(R.id.profilFragment).apply {
+            isChecked = shouldSelectProfile
+            icon = when {
+                profileDrawableWithRing != null -> {
+                    profileDrawableWithRing!!.isSelected = shouldSelectProfile
+                    profileDrawableWithRing
                 }
+                shouldSelectProfile -> ContextCompat.getDrawable(
+                    requireContext(), R.drawable.ic_profile_selected
+                )
+                else -> ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile)
             }
         }
-        navController.addOnDestinationChangedListener(destinationListener!!)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        profileReg?.remove()
-        picassoTarget = null
-        destinationListener?.let {
-            (childFragmentManager.findFragmentById(binding.homeNavHost.id)
-                    as NavHostFragment).navController
-                .removeOnDestinationChangedListener(it)
-        }
-        _binding = null
     }
 
     override fun onResume() {
@@ -295,14 +266,26 @@ class HomeFragment : Fragment() {
             ?.reload()
             ?.addOnCompleteListener { t ->
                 if (!t.isSuccessful || FirebaseAuth.getInstance().currentUser == null) {
-                    Toast.makeText(requireContext(),
+                    Toast.makeText(
+                        requireContext(),
                         "Oturum geçersiz, tekrar giriş yapın.",
-                        Toast.LENGTH_LONG).show()
+                        Toast.LENGTH_LONG
+                    ).show()
                     requireActivity().findNavController(R.id.fragmentContainerView)
-                        .navigate(R.id.action_global_girisFragment, null,
-                            NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build()
+                        .navigate(
+                            R.id.action_global_girisFragment, null,
+                            androidx.navigation.NavOptions.Builder()
+                                .setPopUpTo(R.id.nav_graph, true)
+                                .build()
                         )
                 }
             }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        profileReg?.remove()
+        picassoTarget = null
+        _binding = null
     }
 }

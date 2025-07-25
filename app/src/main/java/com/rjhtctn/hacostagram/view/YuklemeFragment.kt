@@ -68,7 +68,7 @@ class YuklemeFragment : Fragment() {
                 val words = result.split("\\s+".toRegex())
                 if (words.any { it.length > 30 }) {
                     toast("Lütfen kelime başına en fazla 30 karakter girin.")
-                    return@InputFilter ""   // bu karakteri ekleme
+                    return@InputFilter ""
                 }
                 if (source.any { it.isISOControl() && it != '\n' }) {
                     toast("Geçersiz karakter kullandınız.")
