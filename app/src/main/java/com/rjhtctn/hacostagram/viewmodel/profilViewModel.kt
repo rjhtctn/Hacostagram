@@ -49,7 +49,9 @@ class ProfilViewModel : ViewModel() {
 
     private fun startUserListener() {
         val username = cachedUsername ?: return
-        if (userReg != null) return
+
+        userReg?.remove()
+        userReg = null
 
         userReg = db.collection("usersPublic").document(username)
             .addSnapshotListener { snap, err ->
@@ -78,23 +80,16 @@ class ProfilViewModel : ViewModel() {
 
     private fun startPostsListener() {
         val username = cachedUsername ?: return
-        if (postReg != null) return
 
-        db.collection("posts")
+        postReg?.remove()
+        postReg = null
+
+        postReg = db.collection("posts")
             .whereEqualTo("kullaniciAdi", username)
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get(Source.CACHE)
-            .addOnSuccessListener { snap ->
-                postsLive.postValue(snap.toObjects(Posts::class.java))
-            }
-            .addOnCompleteListener {
-                postReg = db.collection("posts")
-                    .whereEqualTo("kullaniciAdi", username)
-                    .orderBy("createdAt", Query.Direction.DESCENDING)
-                    .addSnapshotListener(MetadataChanges.INCLUDE) { s, e ->
-                        if (e != null || s == null || s.metadata.isFromCache) return@addSnapshotListener
-                        postsLive.postValue(s.toObjects(Posts::class.java))
-                    }
+            .addSnapshotListener { s, e ->
+                if (e != null || s == null) return@addSnapshotListener
+                postsLive.postValue(s.toObjects(Posts::class.java))
             }
     }
 

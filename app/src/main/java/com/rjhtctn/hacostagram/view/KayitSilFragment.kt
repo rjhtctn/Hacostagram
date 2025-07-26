@@ -112,9 +112,9 @@ class KayitSilFragment : Fragment() {
                 val batch = db.batch()
                 batch.delete(db.collection("usersPublic").document(username))
                 batch.delete(db.collection("usersPrivate").document(user.uid))
+                batch.delete(db.collection("usernames").document(username))
+                user.delete()
                 withContext(Dispatchers.IO) { batch.commit().await() }
-
-                withContext(Dispatchers.IO) { user.delete().await() }
 
                 toast("Hesap ve tüm veriler silindi!")
 
