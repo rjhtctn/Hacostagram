@@ -4,6 +4,22 @@ Bu proje, Android üzerinde ölçeklenebilir ve modüler bir mimari kullanarak �
 
 ---
 
+## Demo Görünümler
+
+![Giriş Ekranı](docs/Giriş.png)  
+![Kayıt Ekranı](docs/Kayıt.png)  
+![Feed](docs/Feed.png)  
+![Gönderi Paylaşımı](docs/Paylaşım.png)  
+![Profil](docs/Profil.png)  
+![Profil Menü](docs/ProfilMenü.png)  
+![Profil Ziyareti](docs/ProfilZiyareti.png)  
+![Hesap Detay](docs/HesapDetay.png)  
+![Şifre Değiştir](docs/ŞifreDeğiştir.png)  
+![Şifre Sıfırlama](docs/ŞifreSıfırlama.png)  
+![Hesap Sil](docs/HesapSil.png)
+
+---
+
 ## 🚀 Genel Bakış
 - **Teknolojiler:** Kotlin, Jetpack Navigation, ViewModel & LiveData (MVVM), Firebase Auth & Firestore (offline persistence), Cloudinary (unsigned upload), Picasso (image loading), Material Components.
 - **Mimari:**
