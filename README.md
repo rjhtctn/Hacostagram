@@ -6,17 +6,28 @@ Bu proje, Android üzerinde ölçeklenebilir ve modüler bir mimari kullanarak �
 
 ## Demo Görünümler
 
-![Giriş Ekranı](docs/Giriş.png)  
-![Kayıt Ekranı](docs/Kayıt.png)  
-![Feed](docs/Feed.png)  
-![Gönderi Paylaşımı](docs/Paylaşım.png)  
-![Profil](docs/Profil.png)  
-![Profil Menü](docs/ProfilMenü.png)  
-![Profil Ziyareti](docs/ProfilZiyareti.png)  
-![Hesap Detay](docs/HesapDetay.png)  
-![Şifre Değiştir](docs/ŞifreDeğiştir.png)  
-![Şifre Sıfırlama](docs/ŞifreSıfırlama.png)  
-![Hesap Sil](docs/HesapSil.png)
+<table>
+  <tr>
+    <td><img src="docs/Giriş.png" alt="Giriş Ekranı" width="200" /></td>
+    <td><img src="docs/Kayıt.png" alt="Kayıt Ekranı" width="200" /></td>
+    <td><img src="docs/Feed.png" alt="Feed Ekranı" width="200" /></td>
+  </tr>
+  <tr>
+    <td><img src="docs/Paylaşım.png" alt="Gönderi Paylaşımı" width="200" /></td>
+    <td><img src="docs/Profil.png" alt="Profil Ekranı" width="200" /></td>
+    <td><img src="docs/ProfilMenü.png" alt="Profil Menüsü" width="200" /></td>
+  </tr>
+  <tr>
+    <td><img src="docs/ProfilZiyareti.png" alt="Profil Ziyareti" width="200" /></td>
+    <td><img src="docs/HesapDetay.png" alt="Hesap Detayları" width="200" /></td>
+    <td><img src="docs/ŞifreDeğiştir.png" alt="Şifre Değiştir" width="200" /></td>
+  </tr>
+  <tr>
+    <td><img src="docs/ŞifreSıfırlama.png" alt="Şifre Sıfırlama" width="200" /></td>
+    <td><img src="docs/HesapSil.png" alt="Hesap Silme" width="200" /></td>
+    <td></td>
+  </tr>
+</table>
 
 ---
 
