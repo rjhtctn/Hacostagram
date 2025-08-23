@@ -118,3 +118,7 @@ Bu proje, Android üzerinde ölçeklenebilir ve modüler bir mimari kullanarak �
    - Bir Android cihaz veya emulator seçin
    - Uygulamayı başlatın  
 
+
+
+
+
